@@ -128,9 +128,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 19972686}
-  - component: {fileID: 19972687}
   - component: {fileID: 19972688}
+  - component: {fileID: 19972687}
   - component: {fileID: 19972689}
+  - component: {fileID: 19972690}
   m_Layer: 0
   m_Name: Main
   m_TagString: Untagged
@@ -167,6 +168,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MainController
   currentLapText: {fileID: 1598498070}
   bestLapText: {fileID: 1589722625}
+  ghostSystem: {fileID: 19972690}
 --- !u!82 &19972688
 AudioSource:
   m_ObjectHideFlags: 0
@@ -280,6 +282,23 @@ MonoBehaviour:
   movementHintText: {fileID: 137500067}
   throttle: 0
   steering: 0
+--- !u!114 &19972690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 19972685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 516b246dc6be42b43aeabc754bb491dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GhostSystem
+  playerCar: {fileID: 2113753329}
+  ghostPrefab: {fileID: 2803339105279263380, guid: a562db828c71cc44aa3f2a0c86414331, type: 3}
+  ghostsToSpawn: 2
+  sampleRate: 0.08
+  playerSkinIndex: 0
 --- !u!1 &39380577
 GameObject:
   m_ObjectHideFlags: 0

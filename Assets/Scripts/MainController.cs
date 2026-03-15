@@ -1,11 +1,16 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
+using UnityEngine.Profiling;
+using UnityEngine.SceneManagement;
+using YG;
 
 public class MainController : MonoBehaviour
 {
     public TMP_Text currentLapText;
     public TMP_Text bestLapText;
+
+    public GhostSystem ghostSystem;
 
     private float lapTimer;
     private float bestLapTime;
@@ -44,7 +49,7 @@ public class MainController : MonoBehaviour
     }
 
     public void RegisterStart(int checkpointsCount)
-    {      
+    {
         totalCheckpoints = checkpointsCount;
 
         if (!lapStarted)
@@ -52,20 +57,21 @@ public class MainController : MonoBehaviour
             lapStarted = true;
             lapTimer = 0f;
             passedCheckpoints = 0;
+            ghostSystem.StartLap();
             return;
         }
-
         if (passedCheckpoints == totalCheckpoints)
         {
             CompleteLap();
         }
     }
 
-    private void CompleteLap()
+    public void CompleteLap()
     {
         if (bestLapTime == 0f || lapTimer < bestLapTime)
         {
             bestLapTime = lapTimer;
+
             PlayerPrefs.SetFloat(bestLapKey, bestLapTime);
             PlayerPrefs.Save();
         }
@@ -73,6 +79,9 @@ public class MainController : MonoBehaviour
         lapTimer = 0f;
         passedCheckpoints = 0;
         UpdateUI();
+
+        ghostSystem.FinishLap();
+        ghostSystem.StartLap();
     }
 
     private void UpdateUI()
