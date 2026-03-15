@@ -39,23 +39,8 @@ public class CarController : MonoBehaviour
     {
         if (Keyboard.current == null) return;
 
-        throttle = 0f;
-        steering = 0f;
-
-        if (Keyboard.current.aKey.isPressed) steering = 1f;
-        if (Keyboard.current.dKey.isPressed) steering = -1f;
-
-        if (Keyboard.current.wKey.isPressed) throttle = 1f;
-
-        if (Keyboard.current.sKey.isPressed)
-        {
-            throttle = -0.5f;
-            steering *= -1f;
-        }
-
-        if (Keyboard.current.digit1Key.wasPressedThisFrame) driveType = DriveType.FWD;
-        if (Keyboard.current.digit2Key.wasPressedThisFrame) driveType = DriveType.RWD;
-        if (Keyboard.current.digit3Key.wasPressedThisFrame) driveType = DriveType.AWD;
+        throttle = InputController.Instance.throttle;
+        steering = InputController.Instance.steering;
     }
 
     private void FixedUpdate()
