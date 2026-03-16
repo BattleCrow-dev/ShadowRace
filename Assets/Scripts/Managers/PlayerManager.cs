@@ -2,27 +2,22 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class CarController : MonoBehaviour
+public class PlayerManager : MonoBehaviour
 {
     public enum DriveType { FWD, RWD, AWD }
-    public DriveType driveType = DriveType.RWD;
 
-    [Header("Engine")]
-    public float engineForce = 15f;
-    public float maxSpeed = 20f;
-
-    [Header("Steering")]
-    public float turnSpeed = 250f;
-
-    [Header("Grip")]
-    public float baseGrip = 8f;
-    public float fwdUndersteer = 0.7f;
-    public float rwdOversteer = 0.6f;
-
-    [Header("Resistance")]
-    public float drag = 1.5f;
+    [Header("Car_Parameters")]
+    [SerializeField] private DriveType driveType = DriveType.RWD;
+    [SerializeField] private float engineForce = 15f;
+    [SerializeField] private float maxSpeed = 20f;
+    [SerializeField] private float turnSpeed = 250f;
+    [SerializeField] private float baseGrip = 8f;
+    [SerializeField] private float fwdUndersteer = 0.7f;
+    [SerializeField] private float rwdOversteer = 0.6f;
+    [SerializeField] private float drag = 1.5f;
 
     private Rigidbody2D rb;
+    private InputManager inputManager;
 
     private float throttle;
     private float steering;
@@ -30,17 +25,15 @@ public class CarController : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = 0f;
-        rb.linearDamping = 0f;
-        rb.angularDamping = 2f;
+        inputManager = FindAnyObjectByType<InputManager>();
     }
 
     private void Update()
     {
         if (Keyboard.current == null) return;
 
-        throttle = InputController.Instance.throttle;
-        steering = InputController.Instance.steering;
+        throttle = inputManager.GetThrottle();
+        steering = inputManager.GetSteering();
     }
 
     private void FixedUpdate()
@@ -65,7 +58,7 @@ public class CarController : MonoBehaviour
         rb.linearVelocity = forwardVel + sideVel / grip;
 
         if (rb.linearVelocity.magnitude < maxSpeed)
-            rb.AddForce(forward * throttle * engineForce, ForceMode2D.Force);
+            rb.AddForce(engineForce * throttle * forward, ForceMode2D.Force);
 
         float speedFactor = Mathf.Clamp01(rb.linearVelocity.magnitude / maxSpeed);
         rb.MoveRotation(rb.rotation + steering * turnSpeed * speedFactor * Time.fixedDeltaTime);

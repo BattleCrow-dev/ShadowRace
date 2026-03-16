@@ -2,33 +2,24 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using YG;
 
-public class InputController : MonoBehaviour
+public class InputManager : MonoBehaviour
 {
-    public static InputController Instance;
+    [Header("Elements")]
+    [SerializeField] private Joystick joystick;
 
-    public Joystick joystick;
-    public GameObject movementHintText;
-
-    public float throttle;
-    public float steering;
+    private float throttle;
+    private float steering;
 
     private bool mobile;
 
     private void Awake()
     {
-        Instance = this;
         mobile = YG2.envir.isMobile;
 
         if (mobile)
-        {
-            movementHintText.SetActive(false);
-            joystick.gameObject.SetActive(true);
-        }
+            FindAnyObjectByType<UIManager>().ShowMobileUI();
         else
-        {
-            movementHintText.SetActive(true);
-            joystick.gameObject.SetActive(false);
-        }
+            FindAnyObjectByType<UIManager>().ShowPCUI();
     }
 
     private void Update()
@@ -45,7 +36,7 @@ public class InputController : MonoBehaviour
 
         if (throttle > 0f)
             steering = Mathf.Abs(joystick.Horizontal) > 0.1f ? -joystick.Horizontal : 0f;
-        else 
+        else
             steering = Mathf.Abs(joystick.Horizontal) > 0.1f ? joystick.Horizontal : 0f;
     }
 
@@ -65,4 +56,7 @@ public class InputController : MonoBehaviour
             steering *= -1f;
         }
     }
+
+    public float GetThrottle() => throttle;
+    public float GetSteering() => steering;
 }

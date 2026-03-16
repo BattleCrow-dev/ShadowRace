@@ -1,55 +1,55 @@
-using UnityEngine;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using YG;
 
-public class GhostSystem : MonoBehaviour
+
+[Serializable]
+public struct GhostFrame
 {
-    public Transform playerCar;
-    public GameObject ghostPrefab;
+    public float time;
+    public float x;
+    public float y;
+    public float rot;
+}
 
-    public int ghostsToSpawn = 2;
-    public float sampleRate = 0.08f;
+[Serializable]
+public class GhostLap
+{
+    public GhostFrame[] frames;
+}
 
-    float timer;
-    float nextSample;
-    bool recording;
+public class GhostsManager : MonoBehaviour
+{
+    [Header("Elements")]
+    [SerializeField] private Transform playerCar;
+    [SerializeField] private GameObject ghostPrefab;
 
-    List<GhostFrame> frames = new List<GhostFrame>();
+    [Header("Parameters")]
+    [SerializeField] private int ghostsToSpawn = 2;
+    [SerializeField] private float sampleRate = 0.08f;
 
-    List<Session> sessions = new List<Session>();
+    private float timer;
+    private float nextSample;
+    private bool recording;
 
-    List<GhostReplay> activeGhosts = new List<GhostReplay>();
+    private List<GhostFrame> frames = new();
+    private List<Session> sessions = new();
+    private List<GhostReplay> activeGhosts = new();
 
-    public int playerSkinIndex;
-
-    [Serializable]
-    public struct GhostFrame
-    {
-        public float time;
-        public float x;
-        public float y;
-        public float rot;
-    }
-
-    [Serializable]
-    public class GhostLap
-    {
-        public int skinIndex;
-        public GhostFrame[] frames;
-    }
-
-    void Start()
+    private void Start()
     {
         YG2.MultiplayerSessions.onSessionsLoaded += OnSessionsLoaded;
 
-        InitConfig config = new InitConfig();
-        config.count = 20;
+        InitConfig config = new()
+        {
+            count = 20
+        };
 
         YG2.MultiplayerSessions.Init(config);
     }
 
-    void Update()
+    private void Update()
     {
         if (!recording)
             return;
@@ -67,9 +67,6 @@ public class GhostSystem : MonoBehaviour
                 y = playerCar.position.y,
                 rot = playerCar.eulerAngles.z
             });
-
-            if (frames.Count > 4000)
-                frames.RemoveAt(0);
         }
     }
 
@@ -87,29 +84,22 @@ public class GhostSystem : MonoBehaviour
     {
         recording = false;
 
-        GhostLap lap = new GhostLap();
-        lap.frames = frames.ToArray();
-        lap.skinIndex = playerSkinIndex;
-
+        GhostLap lap = new() { frames = frames.ToArray() };
         string json = JsonUtility.ToJson(lap);
 
-        var payload = new Payload();
-        payload.ghostLap = json;
-
+        Payload payload = new() { ghostLap = json };
         YG2.MultiplayerSessions.Commit(payload);
 
-        Meta meta = new Meta();
-        meta.meta1 = 1;
-
+        Meta meta = new() { meta1 = 1 };
         YG2.MultiplayerSessions.Push(meta);
     }
 
-    void OnSessionsLoaded(List<Session> loadedSessions)
+    private void OnSessionsLoaded(List<Session> loadedSessions)
     {
         sessions = loadedSessions;
     }
 
-    void SpawnGhosts()
+    private void SpawnGhosts()
     {
         foreach (var g in activeGhosts)
             Destroy(g.gameObject);
@@ -119,8 +109,7 @@ public class GhostSystem : MonoBehaviour
         if (sessions == null || sessions.Count == 0)
             return;
 
-        List<int> usedIndexes = new List<int>();
-
+        List<int> usedIndexes = new();
         int attempts = 0;
 
         while (activeGhosts.Count < ghostsToSpawn && attempts < 20)
@@ -135,22 +124,18 @@ public class GhostSystem : MonoBehaviour
             usedIndexes.Add(random);
 
             var timeline = sessions[random].timeline;
-
             if (timeline == null || timeline.Count == 0)
                 continue;
 
             string json = timeline[timeline.Count - 1].payload.ghostLap;
-
             if (string.IsNullOrEmpty(json))
                 continue;
 
             GhostLap lap = JsonUtility.FromJson<GhostLap>(json);
-
             if (lap.frames == null || lap.frames.Length < 2)
                 continue;
 
             GameObject ghost = Instantiate(ghostPrefab);
-
             GhostReplay replay = ghost.AddComponent<GhostReplay>();
             replay.Init(lap);
 
@@ -165,15 +150,12 @@ public class GhostSystem : MonoBehaviour
         int index;
         float timer;
 
-        int skinIndex;
-
         public void Init(GhostLap lap)
         {
             frames = lap.frames;
-            skinIndex = lap.skinIndex;
         }
 
-        void Update()
+        private void Update()
         {
             if (frames == null || frames.Length < 2)
                 return;
@@ -188,8 +170,8 @@ public class GhostSystem : MonoBehaviour
 
             float lerp = Mathf.InverseLerp(a.time, b.time, timer);
 
-            Vector2 posA = new Vector2(a.x, a.y);
-            Vector2 posB = new Vector2(b.x, b.y);
+            Vector2 posA = new(a.x, a.y);
+            Vector2 posB = new(b.x, b.y);
 
             transform.position = Vector2.Lerp(posA, posB, lerp);
 
