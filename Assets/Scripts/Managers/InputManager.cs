@@ -6,6 +6,7 @@ using YG;
 public class InputManager : MonoBehaviour
 {
     [Header("Elements")]
+    [SerializeField] private GameManager gameManager;
     [SerializeField] private Joystick joystick;
 
     private float throttle;
@@ -15,8 +16,11 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
-        mobile = YG2.envir.isMobile;
+        mobile = YG2.envir.isMobile;       
+    }
 
+    public void ShowUI()
+    {
         if (mobile)
             FindAnyObjectByType<UIManager>().ShowMobileUI();
         else
@@ -25,10 +29,13 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        if (mobile)
-            MobileInput();
-        else
-            KeyboardInput();
+        if (gameManager.GetIsGameStarted())
+        {
+            if (mobile)
+                MobileInput();
+            else
+                KeyboardInput();
+        }
     }
 
     private void MobileInput()
@@ -56,9 +63,6 @@ public class InputManager : MonoBehaviour
             throttle = -0.5f;
             steering *= -1f;
         }
-
-        if (Keyboard.current.escapeKey.isPressed)
-            SceneManager.LoadScene(0);
     }
 
     public float GetThrottle() => throttle;

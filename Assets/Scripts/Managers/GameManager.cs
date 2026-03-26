@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     private UIManager uiManager;
     private GhostsManager ghostsManager;
+    private InputManager inputManager;
 
     private float lapTimer;
 
@@ -11,18 +13,27 @@ public class GameManager : MonoBehaviour
     private int passedCheckpoints;
 
     private bool lapStarted;
+    private bool isGameStarted;
 
     private void Awake()
     {
         uiManager = FindAnyObjectByType<UIManager>();
         ghostsManager = FindAnyObjectByType<GhostsManager>();
+        inputManager = FindAnyObjectByType<InputManager>();
 
         uiManager.UpdateLapTimer(lapTimer);
     }
 
+    public void StartGame()
+    {
+        isGameStarted = true;
+        inputManager.ShowUI();
+        ghostsManager.StartGame();
+    }
+
     private void Update()
     {
-        if (lapStarted)
+        if (lapStarted && isGameStarted)
         {
             lapTimer += Time.deltaTime;
             uiManager.UpdateLapTimer(lapTimer);
@@ -43,7 +54,7 @@ public class GameManager : MonoBehaviour
     {
         totalCheckpoints = checkpointsCount;
 
-        if (!lapStarted)
+        if (!lapStarted && isGameStarted)
         {
             lapStarted = true;
             lapTimer = 0f;
@@ -63,6 +74,14 @@ public class GameManager : MonoBehaviour
         passedCheckpoints = 0;
 
         ghostsManager.FinishLap();
-        ghostsManager.StartLap();
+        isGameStarted = false;
+        uiManager.ShowFinishPanel();
     }
+
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public bool GetIsGameStarted() => isGameStarted;
 }

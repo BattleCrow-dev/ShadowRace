@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
+    [Header("UI_Panels")]
+    [SerializeField] private GameObject finishPanel;
+
     [Header("UI_Texts")]
     [SerializeField] private TMP_Text currentLapText;
 
@@ -25,6 +28,11 @@ public class UIManager : MonoBehaviour
         joystick.SetActive(false);
         mobileMovementHintText.SetActive(false);
         PcMovementHintText.SetActive(true);
+    }
+
+    public void ShowFinishPanel()
+    {
+        finishPanel.SetActive(true);
     }
 
     public void UpdateLapTimer(float time)

@@ -18,6 +18,7 @@ public class PlayerManager : MonoBehaviour
 
     private Rigidbody2D rb;
     private InputManager inputManager;
+    private GameManager gameManager;
 
     private float throttle;
     private float steering;
@@ -26,6 +27,7 @@ public class PlayerManager : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         inputManager = FindAnyObjectByType<InputManager>();
+        gameManager = FindAnyObjectByType<GameManager>();
     }
 
     private void Update()
@@ -38,31 +40,36 @@ public class PlayerManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector2 forward = transform.up;
-        Vector2 right = transform.right;
+        if (gameManager.GetIsGameStarted())
+        {
+            Vector2 forward = transform.up;
+            Vector2 right = transform.right;
 
-        float forwardSpeed = Vector2.Dot(rb.linearVelocity, forward);
-        float sideSpeed = Vector2.Dot(rb.linearVelocity, right);
+            float forwardSpeed = Vector2.Dot(rb.linearVelocity, forward);
+            float sideSpeed = Vector2.Dot(rb.linearVelocity, right);
 
-        Vector2 forwardVel = forward * forwardSpeed;
-        Vector2 sideVel = right * sideSpeed;
+            Vector2 forwardVel = forward * forwardSpeed;
+            Vector2 sideVel = right * sideSpeed;
 
-        float grip = baseGrip;
+            float grip = baseGrip;
 
-        if (driveType == DriveType.FWD && Mathf.Abs(throttle) > 0.1f)
-            grip *= fwdUndersteer;
+            if (driveType == DriveType.FWD && Mathf.Abs(throttle) > 0.1f)
+                grip *= fwdUndersteer;
 
-        if (driveType == DriveType.RWD && Mathf.Abs(throttle) > 0.1f)
-            grip *= rwdOversteer;
+            if (driveType == DriveType.RWD && Mathf.Abs(throttle) > 0.1f)
+                grip *= rwdOversteer;
 
-        rb.linearVelocity = forwardVel + sideVel / grip;
+            rb.linearVelocity = forwardVel + sideVel / grip;
 
-        if (rb.linearVelocity.magnitude < maxSpeed)
-            rb.AddForce(engineForce * throttle * forward, ForceMode2D.Force);
+            if (rb.linearVelocity.magnitude < maxSpeed)
+                rb.AddForce(engineForce * throttle * forward, ForceMode2D.Force);
 
-        float speedFactor = Mathf.Clamp01(rb.linearVelocity.magnitude / maxSpeed);
-        rb.MoveRotation(rb.rotation + steering * turnSpeed * speedFactor * Time.fixedDeltaTime);
+            float speedFactor = Mathf.Clamp01(rb.linearVelocity.magnitude / maxSpeed);
+            rb.MoveRotation(rb.rotation + steering * turnSpeed * speedFactor * Time.fixedDeltaTime);
 
-        rb.linearVelocity *= 1f / (1f + drag * Time.fixedDeltaTime);
+            rb.linearVelocity *= 1f / (1f + drag * Time.fixedDeltaTime);
+        }
+        else
+            rb.linearVelocity = Vector2.zero;
     }
 }

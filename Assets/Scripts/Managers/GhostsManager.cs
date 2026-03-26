@@ -16,6 +16,13 @@ public struct GhostFrame
 [Serializable]
 public class GhostLap
 {
+    public int trackIndex;
+
+    public int skinIndex;
+    public int colorIndex;
+
+    public float lapTime;
+
     public GhostFrame[] frames;
 }
 
@@ -28,6 +35,9 @@ public class GhostsManager : MonoBehaviour
     [Header("Parameters")]
     [SerializeField] private int ghostsToSpawn = 2;
     [SerializeField] private float sampleRate = 0.08f;
+    [SerializeField] private int trackIndex;
+    [SerializeField] private int skinIndex;
+    [SerializeField] private int colorIndex;
 
     private float timer;
     private float nextSample;
@@ -37,7 +47,7 @@ public class GhostsManager : MonoBehaviour
     private List<Session> sessions = new();
     private List<GhostReplay> activeGhosts = new();
 
-    private void Start()
+    public void StartGame()
     {
         YG2.MultiplayerSessions.onSessionsLoaded += OnSessionsLoaded;
 
@@ -91,7 +101,15 @@ public class GhostsManager : MonoBehaviour
     {
         recording = false;
 
-        GhostLap lap = new() { frames = frames.ToArray() };
+        GhostLap lap = new()
+        {
+            trackIndex = trackIndex,
+            skinIndex = skinIndex,
+            colorIndex = colorIndex,
+            lapTime = timer,
+            frames = frames.ToArray()
+        };
+
         string json = JsonUtility.ToJson(lap);
 
         Payload payload = new() { ghostLap = json };
@@ -102,7 +120,6 @@ public class GhostsManager : MonoBehaviour
             meta1 = (long) timer
         };
 
-        Debug.Log($"[MP] Отправка круга. Время={timer}, кадров={frames.Count}");
         YG2.MultiplayerSessions.Push(meta);
     }
 
@@ -170,10 +187,12 @@ public class GhostsManager : MonoBehaviour
                 continue;
 
             GhostLap lap = JsonUtility.FromJson<GhostLap>(json);
-            if (lap.frames == null || lap.frames.Length < 2)
+
+            if (lap.trackIndex != trackIndex)
                 continue;
 
             GameObject ghost = Instantiate(ghostPrefab);
+
             GhostReplay replay = ghost.AddComponent<GhostReplay>();
             replay.Init(lap);
 

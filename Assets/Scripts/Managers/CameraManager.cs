@@ -5,6 +5,7 @@ public class CameraManager : MonoBehaviour
 {
     [Header("Elements")]
     [SerializeField] private Transform target;
+    [SerializeField] private GameManager gameManager;
 
     [Header("Parametera")]
     [SerializeField] private float positionSmooth = 0.12f;
@@ -26,7 +27,7 @@ public class CameraManager : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!target) return;
+        if (!target || !gameManager.GetIsGameStarted()) return;
 
         Vector3 targetPos = new(target.position.x, target.position.y, transform.position.z);
         transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref velocity, positionSmooth);
