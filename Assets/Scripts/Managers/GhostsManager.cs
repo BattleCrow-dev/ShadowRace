@@ -43,7 +43,14 @@ public class GhostsManager : MonoBehaviour
 
         InitConfig config = new()
         {
-            count = 20
+            count = 20,
+            meta = new MetaFilter()
+        };
+
+        config.meta.meta1 = new YG.Range
+        {
+            min = 0,
+            max = 300
         };
 
         YG2.MultiplayerSessions.Init(config);
@@ -90,13 +97,44 @@ public class GhostsManager : MonoBehaviour
         Payload payload = new() { ghostLap = json };
         YG2.MultiplayerSessions.Commit(payload);
 
-        Meta meta = new() { meta1 = 1 };
+        Meta meta = new()
+        {
+            meta1 = (long) timer
+        };
+
+        Debug.Log($"[MP] Отправка круга. Время={timer}, кадров={frames.Count}");
         YG2.MultiplayerSessions.Push(meta);
     }
 
     private void OnSessionsLoaded(List<Session> loadedSessions)
     {
         sessions = loadedSessions;
+
+        Debug.Log($"[MP] Загружено сессий: {sessions.Count}");
+
+        for (int i = 0; i < sessions.Count; i++)
+        {
+            var s = sessions[i];
+
+            string playerName = s.player != null ? s.player.name : "unknown";
+            int timelineCount = s.timeline != null ? s.timeline.Count : 0;
+
+            Debug.Log($"[MP] Сессия {i}: playerName={playerName}, записей={timelineCount}");
+
+            if (s.timeline != null && s.timeline.Count > 0)
+            {
+                var payload = s.timeline[s.timeline.Count - 1].payload;
+
+                if (!string.IsNullOrEmpty(payload.ghostLap))
+                {
+                    Debug.Log($"[MP] Есть ghostLap, размер={payload.ghostLap.Length} символов");
+                }
+                else
+                {
+                    Debug.Log("[MP] ghostLap пустой");
+                }
+            }
+        }
     }
 
     private void SpawnGhosts()

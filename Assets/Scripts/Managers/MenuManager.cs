@@ -1,16 +1,48 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using YG;
 
 public class MenuManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [Header("Buttons")]
+    [SerializeField] private Button playButton;
+    [SerializeField] private Button authButton;
+
+    private void Start()
     {
-        
+        playButton.interactable = false;
+
+        authButton.onClick.AddListener(StartAuth);
+        playButton.onClick.AddListener(() => SceneManager.LoadScene(1));
+
+        CheckAuth();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void CheckAuth()
     {
-        
+        if (YG2.player.auth)
+            OnAuthorized();
+        else
+            playButton.interactable = false;
+    }
+
+    private void StartAuth()
+    {
+        YG2.OpenAuthDialog();
+        OnAuthResult();
+    }
+
+    private void OnAuthResult()
+    {
+        if (YG2.player.auth)
+            OnAuthorized();
+    }
+
+    private void OnAuthorized()
+    {
+        authButton.gameObject.SetActive(false);
+        playButton.interactable = true;
     }
 }

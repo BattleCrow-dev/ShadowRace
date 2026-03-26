@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using YG;
 
 public class InputManager : MonoBehaviour
@@ -55,6 +56,9 @@ public class InputManager : MonoBehaviour
             throttle = -0.5f;
             steering *= -1f;
         }
+
+        if (Keyboard.current.escapeKey.isPressed)
+            SceneManager.LoadScene(0);
     }
 
     public float GetThrottle() => throttle;
