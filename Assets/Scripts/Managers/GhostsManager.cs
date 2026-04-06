@@ -32,6 +32,9 @@ public class GhostsManager : MonoBehaviour
     [SerializeField] private Transform playerCar;
     [SerializeField] private GameObject ghostPrefab;
 
+    [Header("Sprites")]
+    [SerializeField] private List<Sprite> ghostSprites;
+
     [Header("Parameters")]
     [SerializeField] private int ghostsToSpawn = 2;
     [SerializeField] private float sampleRate = 0.08f;
@@ -47,21 +50,42 @@ public class GhostsManager : MonoBehaviour
     private List<Session> sessions = new();
     private List<GhostReplay> activeGhosts = new();
 
-    public void StartGame()
+    public void StartGame(int trackIndex, int skinIndex)
     {
+        this.trackIndex = trackIndex;
+        this.skinIndex = skinIndex;
+
+        YG2.MultiplayerSessions.onSessionsLoaded -= OnSessionsLoaded;
         YG2.MultiplayerSessions.onSessionsLoaded += OnSessionsLoaded;
+
+        float bestTime = SavesManager.Instance.GetBestResult(trackIndex);
 
         InitConfig config = new()
         {
-            count = 20,
+            count = 10,
             meta = new MetaFilter()
         };
 
-        config.meta.meta1 = new YG.Range
+        if (bestTime > 0f)
         {
-            min = 0,
-            max = 300
-        };
+            config.meta.meta1 = new YG.Range
+            {
+                min = (long) (Mathf.Max(0, bestTime - 5f)),
+                max = (long) (bestTime + 5f)
+            };
+
+            Debug.Log($"[MP] Загружаем ghost около {bestTime}");
+        }
+        else
+        {
+            config.meta.meta1 = new YG.Range
+            {
+                min = 0,
+                max = 300
+            };
+
+            Debug.Log("[MP] Нет рекорда, грузим любые");
+        }
 
         YG2.MultiplayerSessions.Init(config);
     }
@@ -85,6 +109,11 @@ public class GhostsManager : MonoBehaviour
                 rot = playerCar.eulerAngles.z
             });
         }
+    }
+
+    public void SetPlayerCar(Transform car)
+    {
+        playerCar = car;
     }
 
     public void StartLap()
@@ -119,6 +148,8 @@ public class GhostsManager : MonoBehaviour
         {
             meta1 = (long) timer
         };
+
+        SavesManager.Instance.SetBestResult(trackIndex, timer);
 
         YG2.MultiplayerSessions.Push(meta);
     }
@@ -191,7 +222,11 @@ public class GhostsManager : MonoBehaviour
             if (lap.trackIndex != trackIndex)
                 continue;
 
+            if (lap.skinIndex != skinIndex)
+                continue;
+
             GameObject ghost = Instantiate(ghostPrefab);
+            ghost.GetComponent<SpriteRenderer>().sprite = ghostSprites[lap.skinIndex];
 
             GhostReplay replay = ghost.AddComponent<GhostReplay>();
             replay.Init(lap);

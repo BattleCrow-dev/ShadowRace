@@ -25,6 +25,11 @@ public class CameraManager : MonoBehaviour
         targetRB = target.GetComponent<Rigidbody2D>();
     }
 
+    public void SetTarget(Transform target)
+    {
+        this.target = target;
+    }
+
     private void LateUpdate()
     {
         if (!target || !gameManager.GetIsGameStarted()) return;

@@ -1,4 +1,5 @@
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using YG;
 
@@ -6,38 +7,36 @@ namespace YG
 {
     public partial class SavesYG
     {
-        public int[] openedSkins = { 0, 0, 0 };
-        public int[] openedTracks = { 0, 0, 0, 0 };
-        public int curSkinIndex = 0;
-        public int curColorIndex = 0;
+        public int curTrack = 0;
+        public int curCar = 0;
+        public List<float> bestResults = new() { -1f, -1f, -1f };
     }
 }
 
 public class SavesManager : MonoBehaviour
 {
-
-    public bool OpenSkin(int index)
+    public static SavesManager Instance;
+    private void Awake()
     {
-        if (!(index > YG2.saves.openedSkins.Length) && YG2.saves.openedSkins[index] == 0)
-        {
-            YG2.saves.openedSkins[index] = 1;
-            return true;
-        }
-
-        return false;
+        Instance = this;
     }
 
-    public bool OpenTrack(int index) 
-    {
-        if (!(index > YG2.saves.openedTracks.Length) && YG2.saves.openedTracks[index] == 0)
-        { 
-            YG2.saves.openedTracks[index] = 1; 
-            return true; 
-        }
-
-        return false;
+    public float GetBestResult(int trackIndex)
+    {   
+        return YG2.saves.bestResults[trackIndex]; 
     }
 
-    public void SetCurSkinIndex(int index) => YG2.saves.curSkinIndex = index;
-    public void SetCurColorIndex(int index) => YG2.saves.curColorIndex = index;
-}
+    public void SetBestResult(int trackIndex, float value) 
+    { 
+        if (GetBestResult(trackIndex) > value || GetBestResult(trackIndex) == -1)
+            YG2.saves.bestResults[trackIndex] = value;
+
+        YG2.SaveProgress();
+    }
+
+    public int GetCurTrack() => YG2.saves.curTrack;
+    public void SetCurTrack(int index) { YG2.saves.curTrack = index; YG2.SaveProgress(); }
+    public int GetCurCar() => YG2.saves.curCar;
+    public void SetCurCar(int index) { YG2.saves.curCar = index; YG2.SaveProgress(); }
+
+    }

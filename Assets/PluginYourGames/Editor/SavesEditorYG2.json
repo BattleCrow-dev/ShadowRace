@@ -1,0 +1,18 @@
+{
+    "intExample": 5,
+    "strExample": "Hello!",
+    "boolExample": [
+        false,
+        false,
+        false,
+        false
+    ],
+    "idSave": 74,
+    "curTrack": 0,
+    "curCar": 1,
+    "bestResults": [
+        20.279380798339845,
+        39.436500549316409,
+        38.16529846191406
+    ]
+}
