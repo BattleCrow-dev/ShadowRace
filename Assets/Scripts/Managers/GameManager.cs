@@ -1,3 +1,5 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -13,6 +15,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject commonCar;
     [SerializeField] private GameObject fastCar;
     [SerializeField] private GameObject pickupCar;
+    [SerializeField] private List<Sprite> commonCarVariants;
+    [SerializeField] private List<Sprite> fastCarVariants;
+    [SerializeField] private List<Sprite> pickupCarVariants;
 
     private UIManager uiManager;
     private GhostsManager ghostsManager;
@@ -26,9 +31,9 @@ public class GameManager : MonoBehaviour
 
     private int currentTrack;
     private int currentCar;
+    private int currentColor;
     private bool lapStarted;
     private bool isGameStarted;
-    private bool isPaused = false;
 
     private void Awake()
     {
@@ -44,7 +49,7 @@ public class GameManager : MonoBehaviour
     {
         isGameStarted = true;
         inputManager.ShowUI();
-        ghostsManager.StartGame(currentTrack, currentCar);
+        ghostsManager.StartGame(currentTrack, currentCar, currentColor);
     }
 
     private void Update()
@@ -126,32 +131,37 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ChooseCar(int index)
+    public void ChooseCar(int carIndex, int colorIndex)
     {
         commonCar.SetActive(false);
         fastCar.SetActive(false);
         pickupCar.SetActive(false);
-        currentCar = index;
+        currentCar = carIndex;
+        currentColor = colorIndex;
 
-        switch (index)
+        switch (carIndex)
         {
             case 0:
                 commonCar.SetActive(true);
+                commonCar.GetComponent<SpriteRenderer>().sprite = commonCarVariants[colorIndex];
                 cameraManager.SetTarget(commonCar.transform);
                 ghostsManager.SetPlayerCar(commonCar.transform);
                 break;
             case 1:
                 fastCar.SetActive(true);
+                fastCar.GetComponent<SpriteRenderer>().sprite = fastCarVariants[colorIndex];
                 cameraManager.SetTarget(fastCar.transform);
                 ghostsManager.SetPlayerCar(fastCar.transform);
                 break;
             case 2:
                 pickupCar.SetActive(true);
+                pickupCar.GetComponent<SpriteRenderer>().sprite = pickupCarVariants[colorIndex];
                 cameraManager.SetTarget(pickupCar.transform);
                 ghostsManager.SetPlayerCar(pickupCar.transform);
                 break;
             default:
                 commonCar.SetActive(true);
+                commonCar.GetComponent<SpriteRenderer>().sprite = commonCarVariants[colorIndex];
                 cameraManager.SetTarget(commonCar.transform);
                 ghostsManager.SetPlayerCar(commonCar.transform);
                 break;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,6 +8,9 @@ using YG;
 
 public class MenuManager : MonoBehaviour
 {
+    [Serializable]
+    private class SpriteList { public List<Sprite> variants; }
+
     [Header("Elements")]
     [SerializeField] private GameManager gameManager;
     [SerializeField] private Camera menuCamera, gameCamera;
@@ -31,6 +35,12 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private Button tracksBackButton;
     [SerializeField] private List<Button> tracksChooseButtons;
     [SerializeField] private List<Button> carsChooseButtons;
+    [SerializeField] private List<Button> carsColorsChooseButtons;
+
+    [Header("Sprites")]
+    [SerializeField] private List<SpriteList> carsColorVariants;
+
+    private int curCarIndex, curCarColorIndex;
 
     private void Start()
     {
@@ -80,6 +90,7 @@ public class MenuManager : MonoBehaviour
 
         ChooseTrack(SavesManager.Instance.GetCurTrack());
         ChooseCar(SavesManager.Instance.GetCurCar());
+        ChooseCarColor(SavesManager.Instance.GetCurCarColor());
     }
 
     private void StartGame()
@@ -118,11 +129,25 @@ public class MenuManager : MonoBehaviour
 
     public void ChooseCar(int index)
     {
-        gameManager.ChooseCar(index);
+        gameManager.ChooseCar(index, curCarColorIndex);
+        curCarIndex = index;
         SavesManager.Instance.SetCurCar(index);
 
         for (int i = 0; i < carsChooseButtons.Count; i++)
             carsChooseButtons[i].interactable = !(i == index);
+    }
+
+    public void ChooseCarColor(int index)
+    {
+        gameManager.ChooseCar(curCarIndex, index);
+        curCarColorIndex = index;
+        SavesManager.Instance.SetCurCarColor(index);
+
+        for (int i = 0; i < carsColorsChooseButtons.Count; i++)
+            carsColorsChooseButtons[i].interactable = !(i == index);
+
+        for (int i = 0; i < carsChooseButtons.Count; i++)
+            carsChooseButtons[i].GetComponent<Image>().sprite = carsColorVariants[i].variants[index];
     }
 
     private IEnumerator CameraZoom()

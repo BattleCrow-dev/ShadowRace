@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using YG;
 
@@ -9,6 +8,7 @@ namespace YG
     {
         public int curTrack = 0;
         public int curCar = 0;
+        public int curCarColor = 0;
         public List<float> bestResults = new() { -1f, -1f, -1f };
     }
 }
@@ -38,5 +38,7 @@ public class SavesManager : MonoBehaviour
     public void SetCurTrack(int index) { YG2.saves.curTrack = index; YG2.SaveProgress(); }
     public int GetCurCar() => YG2.saves.curCar;
     public void SetCurCar(int index) { YG2.saves.curCar = index; YG2.SaveProgress(); }
+    public int GetCurCarColor() => YG2.saves.curCarColor;
+    public void SetCurCarColor(int index) { YG2.saves.curCarColor = index; YG2.SaveProgress(); }
 
-    }
+}

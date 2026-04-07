@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using YG;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerManager : MonoBehaviour
@@ -50,6 +51,9 @@ public class PlayerManager : MonoBehaviour
 
             Vector2 forwardVel = forward * forwardSpeed;
             Vector2 sideVel = right * sideSpeed;
+
+            if (forwardSpeed < 0f)
+                steering = -steering;
 
             float grip = baseGrip;
 

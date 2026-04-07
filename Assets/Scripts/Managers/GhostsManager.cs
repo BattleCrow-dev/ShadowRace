@@ -21,6 +21,8 @@ public class GhostLap
     public int skinIndex;
     public int colorIndex;
 
+    public bool isMobile;
+
     public float lapTime;
 
     public GhostFrame[] frames;
@@ -33,7 +35,9 @@ public class GhostsManager : MonoBehaviour
     [SerializeField] private GameObject ghostPrefab;
 
     [Header("Sprites")]
-    [SerializeField] private List<Sprite> ghostSprites;
+    [SerializeField] private List<Sprite> commonGhostSprites;
+    [SerializeField] private List<Sprite> fastGhostSprites;
+    [SerializeField] private List<Sprite> pickupGhostSprites;
 
     [Header("Parameters")]
     [SerializeField] private int ghostsToSpawn = 2;
@@ -50,10 +54,11 @@ public class GhostsManager : MonoBehaviour
     private List<Session> sessions = new();
     private List<GhostReplay> activeGhosts = new();
 
-    public void StartGame(int trackIndex, int skinIndex)
+    public void StartGame(int trackIndex, int skinIndex, int colorIndex)
     {
         this.trackIndex = trackIndex;
         this.skinIndex = skinIndex;
+        this.colorIndex = colorIndex;
 
         YG2.MultiplayerSessions.onSessionsLoaded -= OnSessionsLoaded;
         YG2.MultiplayerSessions.onSessionsLoaded += OnSessionsLoaded;
@@ -135,6 +140,7 @@ public class GhostsManager : MonoBehaviour
             trackIndex = trackIndex,
             skinIndex = skinIndex,
             colorIndex = colorIndex,
+            isMobile = YG2.envir.isMobile,
             lapTime = timer,
             frames = frames.ToArray()
         };
@@ -225,8 +231,18 @@ public class GhostsManager : MonoBehaviour
             if (lap.skinIndex != skinIndex)
                 continue;
 
+            if (lap.isMobile != YG2.envir.isMobile)
+                continue;
+
             GameObject ghost = Instantiate(ghostPrefab);
-            ghost.GetComponent<SpriteRenderer>().sprite = ghostSprites[lap.skinIndex];
+
+            ghost.GetComponent<SpriteRenderer>().sprite = lap.skinIndex switch
+            {
+                0 => commonGhostSprites[lap.colorIndex],
+                1 => fastGhostSprites[lap.colorIndex],
+                2 => pickupGhostSprites[lap.colorIndex],
+                _ => commonGhostSprites[lap.colorIndex],
+            };
 
             GhostReplay replay = ghost.AddComponent<GhostReplay>();
             replay.Init(lap);
