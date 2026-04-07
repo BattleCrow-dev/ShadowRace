@@ -57,11 +57,11 @@ public class GameManager : MonoBehaviour
         if (lapStarted && isGameStarted)
         {
             lapTimer += Time.deltaTime;
-            uiManager.UpdateLapTimer(lapTimer);
-
-            if (Keyboard.current.escapeKey.wasPressedThisFrame)
-                ReloadScene();
+            uiManager.UpdateLapTimer(lapTimer);          
         }
+
+        if (isGameStarted && Keyboard.current.escapeKey.wasPressedThisFrame)
+            ReloadScene();
     }
 
     public void RegisterCheckpoint(int checkpointIndex)

@@ -40,7 +40,7 @@ public class GhostsManager : MonoBehaviour
     [SerializeField] private List<Sprite> pickupGhostSprites;
 
     [Header("Parameters")]
-    [SerializeField] private int ghostsToSpawn = 2;
+    [SerializeField] private int ghostsToSpawn = 4;
     [SerializeField] private float sampleRate = 0.08f;
     [SerializeField] private int trackIndex;
     [SerializeField] private int skinIndex;
@@ -63,34 +63,17 @@ public class GhostsManager : MonoBehaviour
         YG2.MultiplayerSessions.onSessionsLoaded -= OnSessionsLoaded;
         YG2.MultiplayerSessions.onSessionsLoaded += OnSessionsLoaded;
 
-        float bestTime = SavesManager.Instance.GetBestResult(trackIndex);
-
         InitConfig config = new()
         {
-            count = 10,
+            count = 20,
             meta = new MetaFilter()
         };
 
-        if (bestTime > 0f)
+        config.meta.meta1 = new YG.Range
         {
-            config.meta.meta1 = new YG.Range
-            {
-                min = (long) (Mathf.Max(0, bestTime - 5f)),
-                max = (long) (bestTime + 5f)
-            };
-
-            Debug.Log($"[MP] Загружаем ghost около {bestTime}");
-        }
-        else
-        {
-            config.meta.meta1 = new YG.Range
-            {
-                min = 0,
-                max = 300
-            };
-
-            Debug.Log("[MP] Нет рекорда, грузим любые");
-        }
+            min = 0,
+            max = 300
+        };
 
         YG2.MultiplayerSessions.Init(config);
     }
@@ -226,9 +209,6 @@ public class GhostsManager : MonoBehaviour
             GhostLap lap = JsonUtility.FromJson<GhostLap>(json);
 
             if (lap.trackIndex != trackIndex)
-                continue;
-
-            if (lap.skinIndex != skinIndex)
                 continue;
 
             if (lap.isMobile != YG2.envir.isMobile)
