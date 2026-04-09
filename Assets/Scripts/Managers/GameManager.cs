@@ -101,6 +101,7 @@ public class GameManager : MonoBehaviour
         ghostsManager.FinishLap();
         isGameStarted = false;
         uiManager.ShowFinishPanel();
+        SavesManager.Instance.SaveData();
     }
 
     public void ReloadScene()

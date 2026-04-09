@@ -18,6 +18,7 @@ public class AudioManager : MonoBehaviour
 
     [Header("Sounds")]
     [SerializeField] private AudioClip clickSound;
+    [SerializeField] private AudioClip sliderSound;
     [SerializeField] private AudioClip motorSound;
 
     private float currentMinPitch;
@@ -121,8 +122,12 @@ public class AudioManager : MonoBehaviour
     }
 
     public void PlayClickSound() => soundsSource.PlayOneShot(clickSound);
+    public void PlaySliderSound() => soundsSource.PlayOneShot(sliderSound);
 
-    public void SetMusicVolume(int value) => musicSource.volume = value;
-    public void SetSoundsVolume(int value) => soundsSource.volume = value;
-    public void SetMotorVolume(int value) => motorSource.volume = value;
+    public void SetMusicVolume(float value) => musicSource.volume = value;
+    public void SetSoundsVolume(float value)
+    {
+        soundsSource.volume = value;
+        motorSource.volume = value;
+    }
 }

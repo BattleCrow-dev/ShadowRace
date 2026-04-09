@@ -22,6 +22,8 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject blockPanel;
     [SerializeField] private GameObject garagePanel;
     [SerializeField] private GameObject tracksPanel;
+    [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject rewardsPanel;
 
     [Header("Texts")]
     [SerializeField] private List<TMP_Text> bestTimeTexts;
@@ -33,12 +35,21 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private Button garageBackButton;
     [SerializeField] private Button tracksButton;
     [SerializeField] private Button tracksBackButton;
+    [SerializeField] private Button settingsButton;
+    [SerializeField] private Button settingsBackButton;
+    [SerializeField] private Button settingsSaveButton;
+    [SerializeField] private Button rewardsButton;
+    [SerializeField] private Button rewardsBackButton;
     [SerializeField] private List<Button> tracksChooseButtons;
     [SerializeField] private List<Button> carsChooseButtons;
     [SerializeField] private List<Button> carsColorsChooseButtons;
 
     [Header("Sprites")]
     [SerializeField] private List<SpriteList> carsColorVariants;
+
+    [Header("Sliders")]
+    [SerializeField] private Slider musicVolumeSlider;
+    [SerializeField] private Slider soundsVolumeSlider;
 
     private int curCarIndex, curCarColorIndex;
 
@@ -51,6 +62,10 @@ public class MenuManager : MonoBehaviour
         garageBackButton.onClick.AddListener(CloseGarage);
         tracksButton.onClick.AddListener(OpenTracks);
         tracksBackButton.onClick.AddListener(CloseTracks);
+        settingsButton.onClick.AddListener(OpenSettings);
+        settingsBackButton.onClick.AddListener(CloseSettings);
+        rewardsButton.onClick.AddListener(OpenRewards);
+        rewardsBackButton.onClick.AddListener(CloseRewards);
 
         CheckAuth();
     }
@@ -91,6 +106,9 @@ public class MenuManager : MonoBehaviour
         ChooseTrack(SavesManager.Instance.GetCurTrack());
         ChooseCar(SavesManager.Instance.GetCurCar());
         ChooseCarColor(SavesManager.Instance.GetCurCarColor());
+
+        AudioManager.instance.SetMusicVolume(SavesManager.Instance.GetCurMusicVolume() / musicVolumeSlider.maxValue);
+        AudioManager.instance.SetSoundsVolume(SavesManager.Instance.GetCurSoundsVolume() / soundsVolumeSlider.maxValue);
     }
 
     private void StartGame()
@@ -107,6 +125,7 @@ public class MenuManager : MonoBehaviour
     private void CloseGarage()
     {
         garagePanel.GetComponent<Animation>().Play("GaragePanel_Close");
+        SavesManager.Instance.SaveData();
     }
 
     private void OpenTracks()
@@ -117,6 +136,33 @@ public class MenuManager : MonoBehaviour
     private void CloseTracks()
     {
         tracksPanel.GetComponent<Animation>().Play("TrackPanel_Close");
+        SavesManager.Instance.SaveData();
+    }
+
+    private void OpenSettings()
+    {
+        settingsPanel.GetComponent<Animation>().Play("SettingsPanel");
+        musicVolumeSlider.value = SavesManager.Instance.GetCurMusicVolume();
+        soundsVolumeSlider.value = SavesManager.Instance.GetCurSoundsVolume();
+    }
+
+    private void CloseSettings()
+    {
+        settingsPanel.GetComponent<Animation>().Play("SettingsPanel_Close");
+        SavesManager.Instance.SetCurMusicVolume(musicVolumeSlider.value);
+        SavesManager.Instance.SetCurSoundsVolume(soundsVolumeSlider.value);
+        SavesManager.Instance.SaveData();
+    }
+
+    private void OpenRewards()
+    {
+        rewardsPanel.GetComponent<Animation>().Play("RewardsPanel");
+    }
+
+    private void CloseRewards()
+    {
+        rewardsPanel.GetComponent<Animation>().Play("RewardsPanel_Close");
+        SavesManager.Instance.SaveData();
     }
 
     public void ChooseTrack(int index)
@@ -149,6 +195,18 @@ public class MenuManager : MonoBehaviour
 
         for (int i = 0; i < carsChooseButtons.Count; i++)
             carsChooseButtons[i].GetComponent<Image>().sprite = carsColorVariants[i].variants[index];
+    }
+
+    public void OnMusicVolumeChanges()
+    {
+        AudioManager.instance.SetMusicVolume(musicVolumeSlider.value / musicVolumeSlider.maxValue);
+        AudioManager.instance.PlaySliderSound();
+    }
+
+    public void OnSoundsVolumeChanges()
+    {
+        AudioManager.instance.SetSoundsVolume(soundsVolumeSlider.value / soundsVolumeSlider.maxValue);
+        AudioManager.instance.PlaySliderSound();
     }
 
     private IEnumerator CameraZoom()
