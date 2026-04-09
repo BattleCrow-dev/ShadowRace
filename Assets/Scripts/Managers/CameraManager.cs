@@ -28,6 +28,7 @@ public class CameraManager : MonoBehaviour
     public void SetTarget(Transform target)
     {
         this.target = target;
+        targetRB = target.GetComponent<Rigidbody2D>();
     }
 
     private void LateUpdate()

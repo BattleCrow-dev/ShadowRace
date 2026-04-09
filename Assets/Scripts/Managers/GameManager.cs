@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviour
         isGameStarted = true;
         inputManager.ShowUI();
         ghostsManager.StartGame(currentTrack, currentCar, currentColor);
+        AudioManager.instance.StartEngineSounds(currentCar);
     }
 
     private void Update()
@@ -104,6 +105,7 @@ public class GameManager : MonoBehaviour
 
     public void ReloadScene()
     {
+        AudioManager.instance.ChangeMusic(-1);
         SceneManager.LoadScene(0);
     }
 
@@ -168,5 +170,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public int GetCurrentTrack() => currentTrack;
     public bool GetIsGameStarted() => isGameStarted;
 }

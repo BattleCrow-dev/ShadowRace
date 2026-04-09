@@ -96,6 +96,7 @@ public class MenuManager : MonoBehaviour
     private void StartGame()
     {
         StartCoroutine(nameof(CameraZoom));
+        AudioManager.instance.ChangeMusic(gameManager.GetCurrentTrack());
     }
 
     private void OpenGarage()

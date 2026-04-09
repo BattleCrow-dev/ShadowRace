@@ -52,6 +52,8 @@ public class PlayerManager : MonoBehaviour
             Vector2 forwardVel = forward * forwardSpeed;
             Vector2 sideVel = right * sideSpeed;
 
+            AudioManager.instance.UpdateEngineSound(Mathf.Abs(throttle) > 0f);
+
             if (forwardSpeed < 0f)
                 steering = -steering;
 
@@ -74,6 +76,9 @@ public class PlayerManager : MonoBehaviour
             rb.linearVelocity *= 1f / (1f + drag * Time.fixedDeltaTime);
         }
         else
+        {
+            AudioManager.instance.UpdateEngineSound(false);
             rb.linearVelocity = Vector2.zero;
+        }
     }
 }
