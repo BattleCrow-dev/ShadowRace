@@ -7,10 +7,10 @@
         false,
         false
     ],
-    "idSave": 628,
+    "idSave": 656,
     "curTrack": 1,
-    "curCar": 2,
-    "curCarColor": 4,
+    "curCar": 0,
+    "curCarColor": 2,
     "curMusicVolume": 8.0,
     "curSoundsVolume": 3.0,
     "bestResults": [

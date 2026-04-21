@@ -5,6 +5,7 @@ public class UIManager : MonoBehaviour
 {
     [Header("UI_Panels")]
     [SerializeField] private GameObject finishPanel;
+    [SerializeField] private GameObject infoPanel;
 
     [Header("UI_Texts")]
     [SerializeField] private TMP_Text currentLapText;
@@ -33,6 +34,8 @@ public class UIManager : MonoBehaviour
     public void ShowFinishPanel()
     {
         finishPanel.SetActive(true);
+        infoPanel.SetActive(false);
+        joystick.SetActive(false);
     }
 
     public void UpdateLapTimer(float time)

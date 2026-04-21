@@ -11254,7 +11254,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 720, y: -225}
-  m_SizeDelta: {x: 150, y: 250}
+  m_SizeDelta: {x: 150, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &201562016
 MonoBehaviour:
@@ -13906,7 +13906,7 @@ MonoBehaviour:
   target: {fileID: 2113753329}
   gameManager: {fileID: 1615334033}
   positionSmooth: 0.12
-  rotationSmooth: 6
+  rotationSmooth: 0
   baseSize: 5
   maxZoomOut: 5
   zoomSpeed: 3
@@ -18896,9 +18896,9 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 163040952}
   - {fileID: 1443778445}
   - {fileID: 334768859}
+  - {fileID: 163040952}
   m_Father: {fileID: 1615334029}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -21664,8 +21664,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 500, y: -295}
-  m_SizeDelta: {x: 200, y: 100}
+  m_AnchoredPosition: {x: 500, y: -275}
+  m_SizeDelta: {x: 200, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &877674583
 MonoBehaviour:
@@ -47686,6 +47686,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   finishPanel: {fileID: 163040951}
+  infoPanel: {fileID: 334768858}
   currentLapText: {fileID: 1598498070}
   joystick: {fileID: 1443778444}
   mobileMovementHintText: {fileID: 137500067}
@@ -47738,7 +47739,7 @@ MonoBehaviour:
   - {fileID: -5809551267147593336, guid: 782aca318edea3f4c89fee76b9445d17, type: 3}
   - {fileID: -5922701602014810362, guid: f119ac9038f1f4642aebb03427221350, type: 3}
   - {fileID: -3357484700112891500, guid: f29ed48c8c8343e48a7a700aa6e29bc9, type: 3}
-  ghostsToSpawn: 2
+  ghostsToSpawn: 3
   sampleRate: 0.08
   trackIndex: 0
   skinIndex: 0
@@ -58491,8 +58492,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -650, y: -175}
-  m_SizeDelta: {x: 300, y: 300}
+  m_AnchoredPosition: {x: -650, y: -150}
+  m_SizeDelta: {x: 350, y: 350}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2929252283516039237
 GameObject:

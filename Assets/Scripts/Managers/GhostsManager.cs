@@ -16,12 +16,14 @@ public struct GhostFrame
 [Serializable]
 public class GhostLap
 {
-    public int trackIndex;
+    public int version;
+    public bool isMobile;
 
+    public string playerName;
+
+    public int trackIndex;
     public int skinIndex;
     public int colorIndex;
-
-    public bool isMobile;
 
     public float lapTime;
 
@@ -40,7 +42,7 @@ public class GhostsManager : MonoBehaviour
     [SerializeField] private List<Sprite> pickupGhostSprites;
 
     [Header("Parameters")]
-    [SerializeField] private int ghostsToSpawn = 4;
+    [SerializeField] private int ghostsToSpawn = 2;
     [SerializeField] private float sampleRate = 0.08f;
     [SerializeField] private int trackIndex;
     [SerializeField] private int skinIndex;
@@ -65,14 +67,25 @@ public class GhostsManager : MonoBehaviour
 
         InitConfig config = new()
         {
-            count = 20,
+            count = ghostsToSpawn,
             meta = new MetaFilter()
-        };
-
-        config.meta.meta1 = new YG.Range
-        {
-            min = 0,
-            max = 300
+            {
+                meta1 = new YG.Range() // lapTime
+                {
+                    min = 0,
+                    max = 300
+                },
+                meta2 = new YG.Range() // version
+                {
+                    min = 0,
+                    max = 2
+                },
+                meta3 = new YG.Range() // trackIndex
+                {
+                    min = trackIndex - 1,
+                    max = trackIndex + 1
+                },
+            }
         };
 
         YG2.MultiplayerSessions.Init(config);
@@ -124,6 +137,8 @@ public class GhostsManager : MonoBehaviour
             skinIndex = skinIndex,
             colorIndex = colorIndex,
             isMobile = YG2.envir.isMobile,
+            version = 1,
+            playerName = YG2.player.name,
             lapTime = timer,
             frames = frames.ToArray()
         };
@@ -135,7 +150,9 @@ public class GhostsManager : MonoBehaviour
 
         Meta meta = new()
         {
-            meta1 = (long) timer
+            meta1 = (long) timer,
+            meta2 = 1,
+            meta3 = trackIndex
         };
 
         SavesManager.Instance.SetBestResult(trackIndex, timer);
@@ -148,7 +165,7 @@ public class GhostsManager : MonoBehaviour
         sessions = loadedSessions;
 
         Debug.Log($"[MP] Загружено сессий: {sessions.Count}");
-
+        
         for (int i = 0; i < sessions.Count; i++)
         {
             var s = sessions[i];

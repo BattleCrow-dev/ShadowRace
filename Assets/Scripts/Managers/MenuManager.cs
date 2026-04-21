@@ -88,6 +88,8 @@ public class MenuManager : MonoBehaviour
     {
         if (YG2.player.auth)
             OnAuthorized();
+        else
+            OnUnauthorized();
     }
 
     private void OnAuthorized()
@@ -109,6 +111,11 @@ public class MenuManager : MonoBehaviour
 
         AudioManager.instance.SetMusicVolume(SavesManager.Instance.GetCurMusicVolume() / musicVolumeSlider.maxValue);
         AudioManager.instance.SetSoundsVolume(SavesManager.Instance.GetCurSoundsVolume() / soundsVolumeSlider.maxValue);
+    }
+
+    private void OnUnauthorized()
+    {
+        
     }
 
     private void StartGame()
