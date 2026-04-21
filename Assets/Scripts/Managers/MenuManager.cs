@@ -178,7 +178,18 @@ public class MenuManager : MonoBehaviour
         SavesManager.Instance.SetCurTrack(index);
 
         for (int i = 0; i < tracksChooseButtons.Count; i++)
-            tracksChooseButtons[i].interactable = !(i == index);
+        {
+            if (i == index)
+            {
+                tracksChooseButtons[i].interactable = false;
+                tracksChooseButtons[i].GetComponent<RectTransform>().localScale = new Vector3(1.25f, 1.25f, 1.25f);
+            }
+            else
+            {
+                tracksChooseButtons[i].interactable = true;
+                tracksChooseButtons[i].GetComponent<RectTransform>().localScale = new Vector3(1f, 1f, 1f);
+            }
+        }
     }
 
     public void ChooseCar(int index)
@@ -188,7 +199,18 @@ public class MenuManager : MonoBehaviour
         SavesManager.Instance.SetCurCar(index);
 
         for (int i = 0; i < carsChooseButtons.Count; i++)
-            carsChooseButtons[i].interactable = !(i == index);
+        {
+            if (i == index)
+            {
+                carsChooseButtons[i].interactable = false;
+                carsChooseButtons[i].GetComponent<RectTransform>().localScale = new Vector3(1.25f, 1.25f, 1.25f);
+            }
+            else
+            {
+                carsChooseButtons[i].interactable = true;
+                carsChooseButtons[i].GetComponent<RectTransform>().localScale = new Vector3(1f, 1f, 1f);
+            }
+        }
     }
 
     public void ChooseCarColor(int index)
@@ -198,7 +220,18 @@ public class MenuManager : MonoBehaviour
         SavesManager.Instance.SetCurCarColor(index);
 
         for (int i = 0; i < carsColorsChooseButtons.Count; i++)
-            carsColorsChooseButtons[i].interactable = !(i == index);
+        {
+            if (i == index)
+            {
+                carsColorsChooseButtons[i].interactable = false;
+                carsColorsChooseButtons[i].GetComponent<RectTransform>().localScale = new Vector3(1.15f, 1.15f, 1.15f);
+            }
+            else
+            {
+                carsColorsChooseButtons[i].interactable = true;
+                carsColorsChooseButtons[i].GetComponent<RectTransform>().localScale = new Vector3(1f, 1f, 1f);
+            }
+        }    
 
         for (int i = 0; i < carsChooseButtons.Count; i++)
             carsChooseButtons[i].GetComponent<Image>().sprite = carsColorVariants[i].variants[index];

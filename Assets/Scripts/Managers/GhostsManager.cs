@@ -163,32 +163,6 @@ public class GhostsManager : MonoBehaviour
     private void OnSessionsLoaded(List<Session> loadedSessions)
     {
         sessions = loadedSessions;
-
-        Debug.Log($"[MP] Загружено сессий: {sessions.Count}");
-        
-        for (int i = 0; i < sessions.Count; i++)
-        {
-            var s = sessions[i];
-
-            string playerName = s.player != null ? s.player.name : "unknown";
-            int timelineCount = s.timeline != null ? s.timeline.Count : 0;
-
-            Debug.Log($"[MP] Сессия {i}: playerName={playerName}, записей={timelineCount}");
-
-            if (s.timeline != null && s.timeline.Count > 0)
-            {
-                var payload = s.timeline[s.timeline.Count - 1].payload;
-
-                if (!string.IsNullOrEmpty(payload.ghostLap))
-                {
-                    Debug.Log($"[MP] Есть ghostLap, размер={payload.ghostLap.Length} символов");
-                }
-                else
-                {
-                    Debug.Log("[MP] ghostLap пустой");
-                }
-            }
-        }
     }
 
     private void SpawnGhosts()
@@ -224,13 +198,6 @@ public class GhostsManager : MonoBehaviour
                 continue;
 
             GhostLap lap = JsonUtility.FromJson<GhostLap>(json);
-
-            if (lap.trackIndex != trackIndex)
-                continue;
-
-            if (lap.isMobile != YG2.envir.isMobile)
-                continue;
-
             GameObject ghost = Instantiate(ghostPrefab);
 
             ghost.GetComponent<SpriteRenderer>().sprite = lap.skinIndex switch
