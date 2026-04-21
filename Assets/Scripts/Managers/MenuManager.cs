@@ -100,7 +100,7 @@ public class MenuManager : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             if (SavesManager.Instance.GetBestResult(i) != -1f)
-                bestTimeTexts[i].text = $"Лучший результат:\n{SavesManager.Instance.GetBestResult(i)} сек.";
+                bestTimeTexts[i].text = $"Лучший результат:\n{string.Format("{0:f2}", SavesManager.Instance.GetBestResult(i))} сек.";
             else
                 bestTimeTexts[i].text = $"Лучший результат: не установлен";
         }

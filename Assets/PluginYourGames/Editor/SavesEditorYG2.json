@@ -1,10 +1,10 @@
 {
-    "idSave": 669,
-    "curTrack": 1,
+    "idSave": 705,
+    "curTrack": 0,
     "curCar": 0,
-    "curCarColor": 1,
-    "curMusicVolume": 3.0,
-    "curSoundsVolume": 7.0,
+    "curCarColor": 0,
+    "curMusicVolume": 6.0,
+    "curSoundsVolume": 4.0,
     "bestResults": [
         13.936727523803711,
         27.93990135192871,

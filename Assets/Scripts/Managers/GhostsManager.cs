@@ -215,8 +215,39 @@ public class GhostsManager : MonoBehaviour
         }
     }
 
+    public List<float> GetGhostsTimes()
+    {
+        List<float> times = new();
+
+        foreach (var ghost in activeGhosts)
+            times.Add(ghost.GetFinishTime());
+
+        return times;
+    }
+
+    public List<string> GetGhostsNames()
+    {
+        List<string> names = new();
+
+        foreach (var ghost in activeGhosts)
+            names.Add(ghost.GetPlayerName());
+
+        return names;
+    }
+
+    public List<Sprite> GetGhostsSprites()
+    {
+        List<Sprite> cars = new();
+
+        foreach (var ghost in activeGhosts)
+            cars.Add(ghost.gameObject.GetComponent<SpriteRenderer>().sprite);
+
+        return cars;
+    }
+
     class GhostReplay : MonoBehaviour
     {
+        GhostLap lap;
         GhostFrame[] frames;
 
         int index;
@@ -224,6 +255,7 @@ public class GhostsManager : MonoBehaviour
 
         public void Init(GhostLap lap)
         {
+            this.lap = lap;
             frames = lap.frames;
         }
 
@@ -250,5 +282,8 @@ public class GhostsManager : MonoBehaviour
             float rot = Mathf.LerpAngle(a.rot, b.rot, lerp);
             transform.rotation = Quaternion.Euler(0, 0, rot);
         }
+
+        public float GetFinishTime() => lap.frames[lap.frames.Length - 1].time;
+        public string GetPlayerName() => lap.playerName;
     }
 }

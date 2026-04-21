@@ -1,5 +1,7 @@
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -96,12 +98,49 @@ public class GameManager : MonoBehaviour
 
     public void CompleteLap()
     {
+        List<float> times = ghostsManager.GetGhostsTimes();
+        times.Add(lapTimer);
+
+        List<string> names = ghostsManager.GetGhostsNames();
+        names.Add(YG2.player.name);
+
+        List<Sprite> cars = ghostsManager.GetGhostsSprites();
+        switch(currentCar)
+        {
+            case 0:
+                cars.Add(commonCarVariants[currentColor]);
+                break;
+            case 1:
+                cars.Add(fastCarVariants[currentColor]);
+                break;
+            case 2:
+                cars.Add(pickupCarVariants[currentColor]);
+                break;
+            default:
+                cars.Add(commonCarVariants[currentColor]);
+                break;
+        }
+
+        var indices = Enumerable.Range(0, times.Count).ToArray();
+        Array.Sort(indices, (a, b) => times[a].CompareTo(times[b]));
+
+        var tempTimes = times.ToArray();
+        var tempNames = names.ToArray();
+        var tempCars = cars.ToArray();
+
+        for (int i = 0; i < indices.Length; i++)
+        {
+            times[i] = tempTimes[indices[i]];
+            names[i] = tempNames[indices[i]];
+            cars[i] = tempCars[indices[i]];
+        }
+
         lapTimer = 0f;
         passedCheckpoints = 0;
 
         ghostsManager.FinishLap();
         isGameStarted = false;
-        uiManager.ShowFinishPanel();
+        uiManager.ShowFinishPanel(times, names, cars);
         SavesManager.Instance.SaveData();
     }
 

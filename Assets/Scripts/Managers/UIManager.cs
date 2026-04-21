@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -9,6 +12,11 @@ public class UIManager : MonoBehaviour
 
     [Header("UI_Texts")]
     [SerializeField] private TMP_Text currentLapText;
+    [SerializeField] private TMP_Text[] finishNames;
+    [SerializeField] private TMP_Text[] finishTimes;
+
+    [Header("UI_Images")]
+    [SerializeField] private Image[] finishCarsImages;
 
     [Header("Mobile_UI_Elements")]
     [SerializeField] private GameObject joystick;
@@ -31,8 +39,15 @@ public class UIManager : MonoBehaviour
         PcMovementHintText.SetActive(true);
     }
 
-    public void ShowFinishPanel()
+    public void ShowFinishPanel(List<float> times, List<string> names, List<Sprite> cars)
     {
+        for(int i = 0; i < 3; i++)
+        {
+            finishTimes[i].text = string.Format("{0:f2}", times[i]);
+            finishNames[i].text = names[i];
+            finishCarsImages[i].sprite = cars[i];
+        }
+
         finishPanel.SetActive(true);
         infoPanel.SetActive(false);
         joystick.SetActive(false);
