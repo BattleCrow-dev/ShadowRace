@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,7 +51,10 @@ public class GameManager : MonoBehaviour
     {
         isGameStarted = true;
         inputManager.ShowUI();
-        ghostsManager.StartGame(currentTrack, currentCar, currentColor);
+
+        if (YG2.player.auth)
+            ghostsManager.StartGame(currentTrack, currentCar, currentColor);
+
         AudioManager.instance.StartEngineSounds(currentCar);
     }
 
@@ -87,7 +89,10 @@ public class GameManager : MonoBehaviour
             lapStarted = true;
             lapTimer = 0f;
             passedCheckpoints = 0;
-            ghostsManager.StartLap();
+
+            if (YG2.player.auth)
+                ghostsManager.StartLap();
+
             return;
         }
         if (passedCheckpoints == totalCheckpoints)
@@ -102,7 +107,11 @@ public class GameManager : MonoBehaviour
         times.Add(lapTimer);
 
         List<string> names = ghostsManager.GetGhostsNames();
-        names.Add(YG2.player.name);
+
+        if (!YG2.player.auth)
+            names.Add("");
+        else
+            names.Add($"> {YG2.player.name} <");
 
         List<Sprite> cars = ghostsManager.GetGhostsSprites();
         switch(currentCar)
@@ -138,7 +147,9 @@ public class GameManager : MonoBehaviour
         lapTimer = 0f;
         passedCheckpoints = 0;
 
-        ghostsManager.FinishLap();
+        if (YG2.player.auth)
+            ghostsManager.FinishLap();
+
         isGameStarted = false;
         uiManager.ShowFinishPanel(times, names, cars);
         SavesManager.Instance.SaveData();

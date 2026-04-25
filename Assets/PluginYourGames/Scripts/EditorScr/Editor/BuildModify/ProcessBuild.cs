@@ -1,8 +1,9 @@
 ﻿namespace YG.EditorScr.BuildModify
 {
-    using UnityEditor.Build.Reporting;
-    using UnityEditor.Build;
     using System.IO;
+    using UnityEditor;
+    using UnityEditor.Build;
+    using UnityEditor.Build.Reporting;
 
     public class ProcessBuild : IPreprocessBuildWithReport, IPostprocessBuildWithReport
     {
@@ -29,6 +30,25 @@
         public void OnPostprocessBuild(BuildReport report)
         {
             ModifyBuild.ModifyIndex();
+
+            if (report.summary.platform != BuildTarget.WebGL) return;
+
+            string buildPath = report.summary.outputPath;
+            string[] loaderFiles = Directory.GetFiles(buildPath, "*.loader.js", SearchOption.AllDirectories);
+
+            if (loaderFiles.Length == 0)
+            {
+                return;
+            }
+
+            string loaderPath = loaderFiles[0];
+            string content = File.ReadAllText(loaderPath);
+            string newContent = content.Replace("alert", "console.warn");
+
+            if (content != newContent)
+            {
+                File.WriteAllText(loaderPath, newContent);
+            }
 
             if (YG2.infoYG.Basic.archivingBuild)
                 ArchivingBuild.Archiving(BuildPath);

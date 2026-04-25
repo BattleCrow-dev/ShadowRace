@@ -73,7 +73,7 @@ public class GhostsManager : MonoBehaviour
                 meta1 = new YG.Range() // lapTime
                 {
                     min = 0,
-                    max = 300
+                    max = 50
                 },
                 meta2 = new YG.Range() // version
                 {

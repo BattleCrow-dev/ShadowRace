@@ -8,7 +8,7 @@ namespace YG
         public static Action<bool> onPauseGame;
         private static bool pauseGame;
         public static bool isPauseGame { get => pauseGame; }
-#if InterstitialAdv_yg && YandexGamesPlatform_yg
+#if !UNITY_EDITOR && InterstitialAdv_yg && YandexGamesPlatform_yg
         private static bool firstPauseGameForInterAdvEvent;
         private static bool firstPauseGameForInterAdvEventComplete;
 #endif
@@ -17,7 +17,7 @@ namespace YG
             if (pause == pauseGame)
                 return;
 
-#if InterstitialAdv_yg && YandexGamesPlatform_yg
+#if !UNITY_EDITOR && InterstitialAdv_yg && YandexGamesPlatform_yg
             if (!firstPauseGameForInterAdvEventComplete)
             {
                 if (!firstPauseGameForInterAdvEvent && pause)

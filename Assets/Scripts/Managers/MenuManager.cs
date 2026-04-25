@@ -30,14 +30,15 @@ public class MenuManager : MonoBehaviour
 
     [Header("Buttons")]
     [SerializeField] private Button playButton;
-    [SerializeField] private Button authButton;
+    [SerializeField] private Button authPanelButton;
+    [SerializeField] private Button authSettingsButton;
+    [SerializeField] private Button authGuestButton;
     [SerializeField] private Button garageButton;
     [SerializeField] private Button garageBackButton;
     [SerializeField] private Button tracksButton;
     [SerializeField] private Button tracksBackButton;
     [SerializeField] private Button settingsButton;
     [SerializeField] private Button settingsBackButton;
-    [SerializeField] private Button settingsSaveButton;
     [SerializeField] private Button rewardsButton;
     [SerializeField] private Button rewardsBackButton;
     [SerializeField] private List<Button> tracksChooseButtons;
@@ -52,10 +53,13 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private Slider soundsVolumeSlider;
 
     private int curCarIndex, curCarColorIndex;
+    private static bool isGuestMode = false;
 
     private void Start()
     {
-        authButton.onClick.AddListener(StartAuth);
+        authPanelButton.onClick.AddListener(StartAuth);
+        authSettingsButton.onClick.AddListener(StartAuth);
+        authGuestButton.onClick.AddListener(SkipAuth);
         playButton.onClick.AddListener(StartGame);
 
         garageButton.onClick.AddListener(OpenGarage);
@@ -67,11 +71,15 @@ public class MenuManager : MonoBehaviour
         rewardsButton.onClick.AddListener(OpenRewards);
         rewardsBackButton.onClick.AddListener(CloseRewards);
 
-        CheckAuth();
+        if (!isGuestMode)
+            CheckAuth();
+        else
+            SkipAuth();
     }
 
     private void CheckAuth()
     {
+        YG2.onGetSDKData += OnAuthorized;
         if (YG2.player.auth)
             OnAuthorized();
         else
@@ -84,20 +92,34 @@ public class MenuManager : MonoBehaviour
         OnAuthResult();
     }
 
+    private void SkipAuth()
+    {
+        isGuestMode = true;
+        authPanel.SetActive(false);
+        authSettingsButton.gameObject.SetActive(true);
+        LoadSaves();
+    }
+
     private void OnAuthResult()
     {
         if (YG2.player.auth)
             OnAuthorized();
-        else
-            OnUnauthorized();
     }
 
     private void OnAuthorized()
     {
+        isGuestMode = false;
+
         authPanel.SetActive(false);
         mainPanel.SetActive(true);
+        authSettingsButton.gameObject.SetActive(false);
 
-        for (int i = 0; i < 3; i++)
+        LoadSaves();
+    }
+
+    private void LoadSaves()
+    {
+        for (int i = 0; i < bestTimeTexts.Count; i++)
         {
             if (SavesManager.Instance.GetBestResult(i) != -1f)
                 bestTimeTexts[i].text = $"Лучший результат:\n{string.Format("{0:f2}", SavesManager.Instance.GetBestResult(i))} сек.";
@@ -111,11 +133,6 @@ public class MenuManager : MonoBehaviour
 
         AudioManager.instance.SetMusicVolume(SavesManager.Instance.GetCurMusicVolume() / musicVolumeSlider.maxValue);
         AudioManager.instance.SetSoundsVolume(SavesManager.Instance.GetCurSoundsVolume() / soundsVolumeSlider.maxValue);
-    }
-
-    private void OnUnauthorized()
-    {
-        
     }
 
     private void StartGame()

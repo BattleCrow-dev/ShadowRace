@@ -117,7 +117,7 @@ public class InputManager : MonoBehaviour
         Vector2 delta = data.position - lastTouchPosition;
         float angleDelta = delta.x * (maxWheelAngle / Screen.width * 2f);
 
-        currentWheelAngle += angleDelta * 2f;
+        currentWheelAngle += angleDelta * 4f;
         currentWheelAngle = Mathf.Clamp(currentWheelAngle, -maxWheelAngle, maxWheelAngle);
 
         steeringWheel.rotation = Quaternion.Euler(0f, 0f, -currentWheelAngle);

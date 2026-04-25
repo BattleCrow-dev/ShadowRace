@@ -29,7 +29,7 @@ namespace YG
         public static void SetFocusWindowGame(bool visible)
         {
 #if UNITY_EDITOR
-            if (!UnityEditor.EditorApplication.isPlaying || exitingPlayMode || UnityEngine.Time.time < 1)
+            if (!UnityEditor.EditorApplication.isPlaying || exitingPlayMode)
                 return;
 #endif
             if (visible)

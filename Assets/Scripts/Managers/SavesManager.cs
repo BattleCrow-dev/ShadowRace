@@ -10,8 +10,8 @@ namespace YG
         public int curCar = 0;
         public int curCarColor = 0;
 
-        public float curMusicVolume = 0.7f;
-        public float curSoundsVolume = 1f;
+        public float curMusicVolume = 7f;
+        public float curSoundsVolume = 10f;
 
         public List<float> bestResults = new() { -1f, -1f, -1f };
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 public class UIManager : MonoBehaviour
 {
@@ -14,9 +15,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text currentLapText;
     [SerializeField] private TMP_Text[] finishNames;
     [SerializeField] private TMP_Text[] finishTimes;
+    [SerializeField] private TMP_Text guestFinishHint;
 
     [Header("UI_Images")]
     [SerializeField] private Image[] finishCarsImages;
+    [SerializeField] private Image[] finishMedalsImages1;
+    [SerializeField] private Image[] finishMedalsImages2;
 
     [Header("Mobile_UI_Elements")]
     [SerializeField] private GameObject joystick;
@@ -41,13 +45,19 @@ public class UIManager : MonoBehaviour
 
     public void ShowFinishPanel(List<float> times, List<string> names, List<Sprite> cars)
     {
-        for(int i = 0; i < 3; i++)
+        for(int i = 0; i < times.Count; i++)
         {
-            finishTimes[i].text = string.Format("{0:f2}", times[i]);
+            finishTimes[i].text = string.Format("{0:f2}", times[i]) + " сек.";
             finishNames[i].text = names[i];
+
+            finishCarsImages[i].enabled = true;
+            finishMedalsImages1[i].enabled = true;
+            finishMedalsImages2[i].enabled = true;
+
             finishCarsImages[i].sprite = cars[i];
         }
 
+        guestFinishHint.gameObject.SetActive(!YG2.player.auth);
         finishPanel.SetActive(true);
         infoPanel.SetActive(false);
         joystick.SetActive(false);
