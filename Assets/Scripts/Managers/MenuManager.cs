@@ -9,7 +9,7 @@ using YG;
 public class MenuManager : MonoBehaviour
 {
     [Serializable]
-    private class SpriteList { public List<Sprite> variants; }
+    public class SpriteList { public List<Sprite> variants; }
 
     [Header("Elements")]
     [SerializeField] private GameManager gameManager;
@@ -42,8 +42,12 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private Button rewardsButton;
     [SerializeField] private Button rewardsBackButton;
     [SerializeField] private List<Button> tracksChooseButtons;
+    [SerializeField] private List<Button> leaderboardsChooseButtons;
     [SerializeField] private List<Button> carsChooseButtons;
     [SerializeField] private List<Button> carsColorsChooseButtons;
+
+    [Header("Leaderboards")]
+    [SerializeField] private List<GameObject> leaderboardsPanels;
 
     [Header("Sprites")]
     [SerializeField] private List<SpriteList> carsColorVariants;
@@ -97,6 +101,8 @@ public class MenuManager : MonoBehaviour
         isGuestMode = true;
         authPanel.SetActive(false);
         authSettingsButton.gameObject.SetActive(true);
+        rewardsButton.GetComponent<Animation>().enabled = false;
+        rewardsButton.interactable = false;
         LoadSaves();
     }
 
@@ -113,6 +119,8 @@ public class MenuManager : MonoBehaviour
         authPanel.SetActive(false);
         mainPanel.SetActive(true);
         authSettingsButton.gameObject.SetActive(false);
+        rewardsButton.GetComponent<Animation>().enabled = true;
+        rewardsButton.interactable = true;
 
         LoadSaves();
     }
@@ -126,7 +134,7 @@ public class MenuManager : MonoBehaviour
             else
                 bestTimeTexts[i].text = $"Лучший результат: не установлен";
         }
-
+        
         ChooseTrack(SavesManager.Instance.GetCurTrack());
         ChooseCar(SavesManager.Instance.GetCurCar());
         ChooseCarColor(SavesManager.Instance.GetCurCarColor());
@@ -180,13 +188,32 @@ public class MenuManager : MonoBehaviour
 
     private void OpenRewards()
     {
+        ChooseLeaderboard(0);
         rewardsPanel.GetComponent<Animation>().Play("RewardsPanel");
     }
 
     private void CloseRewards()
     {
         rewardsPanel.GetComponent<Animation>().Play("RewardsPanel_Close");
-        SavesManager.Instance.SaveData();
+    }
+
+    public void ChooseLeaderboard(int index)
+    {
+        for (int i = 0; i < leaderboardsChooseButtons.Count; i++)
+        {
+            if (i == index)
+            {
+                leaderboardsChooseButtons[i].interactable = false;
+                leaderboardsPanels[i].SetActive(true);
+                leaderboardsChooseButtons[i].GetComponent<RectTransform>().localScale = new Vector3(1.05f, 1.05f, 1.05f);
+            }
+            else
+            {
+                leaderboardsChooseButtons[i].interactable = true;
+                leaderboardsPanels[i].SetActive(false);
+                leaderboardsChooseButtons[i].GetComponent<RectTransform>().localScale = new Vector3(1f, 1f, 1f);
+            }
+        }
     }
 
     public void ChooseTrack(int index)

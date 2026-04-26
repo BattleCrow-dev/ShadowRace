@@ -134,7 +134,10 @@ namespace YG
                     players[0].data.photoUrl = null;
                     players[0].data.rank = null;
                     players[0].data.score = null;
+                    players[0].data.carIndex = 0;
+                    players[0].data.colorIndex = 0;
                     players[0].data.inTop = false;
+                    players[0].data.topIndex = 0;
                     players[0].data.currentPlayer = false;
                     players[0].data.photoSprite = null;
                     players[0].UpdateEntries();
@@ -214,10 +217,12 @@ namespace YG
                 if (rank <= quantityTop)
                 {
                     players[i].data.inTop = true;
+                    players[i].data.topIndex = rank - 1;
                 }
                 else
                 {
                     players[i].data.inTop = false;
+                    players[i].data.topIndex = 0;
                 }
 
                 if (lb.players[i].uniqueID == YG2.player.id)
@@ -232,7 +237,7 @@ namespace YG
                 if (timeTypeConvert)
                 {
                     string timeScore = TimeTypeConvert(lb.players[i].score);
-                    players[i].data.score = timeScore;
+                    players[i].data.score = timeScore + " сек.";
                 }
                 else
                 {
@@ -250,6 +255,9 @@ namespace YG
                         players[i].data.photoUrl = lb.players[i].photo;
                     }
                 }
+
+                players[i].data.carIndex = int.Parse(lb.players[i].extraData.Split(' ')[0]);
+                players[i].data.colorIndex = int.Parse(lb.players[i].extraData.Split(' ')[1]);
 
                 players[i].UpdateEntries();
             }

@@ -167,8 +167,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 318
-        height: 620
+        width: 156
+        height: 312
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -187,10 +187,10 @@ TextureImporter:
       name: medals_1
       rect:
         serializedVersion: 2
-        x: 438
+        x: 217
         y: 0
-        width: 324
-        height: 620
+        width: 161
+        height: 312
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -209,10 +209,10 @@ TextureImporter:
       name: medals_2
       rect:
         serializedVersion: 2
-        x: 885
+        x: 437
         y: 0
-        width: 327
-        height: 620
+        width: 163
+        height: 312
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

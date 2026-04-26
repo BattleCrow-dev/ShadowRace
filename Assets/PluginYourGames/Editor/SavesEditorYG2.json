@@ -1,13 +1,13 @@
 {
-    "idSave": 2,
-    "curTrack": 0,
-    "curCar": 0,
-    "curCarColor": 0,
-    "curMusicVolume": 7.0,
-    "curSoundsVolume": 4.0,
-    "bestResults": [
-        -1.0,
-        -1.0,
-        -1.0
+    "idSave": 32,
+    "track": 2,
+    "car": 0,
+    "color": 1,
+    "musicVolume": 10.0,
+    "soundsVolume": 5.0,
+    "bestTimes": [
+        18.896997451782228,
+        33.87631607055664,
+        29.9420166015625
     ]
 }

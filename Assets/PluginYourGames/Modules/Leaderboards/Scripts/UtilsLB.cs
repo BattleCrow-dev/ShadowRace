@@ -44,25 +44,14 @@ namespace YG.Utils.LB
     {
         public static string TimeTypeConvertStatic(int score, int decimalSize)
         {
-            string format;
-            switch (decimalSize)
-            {
-                case 1:
-                    format = "mm':'ss'.'f";
-                    break;
-                case 2:
-                    format = "mm':'ss'.'ff";
-                    break;
-                case 3:
-                    format = "mm':'ss'.'fff";
-                    break;
-                default:
-                    format = "mm':'ss";
-                    break;
-            }
+            int seconds = score / 1000;
+            int ms = score % 1000;
 
-            string formattedTime = TimeSpan.FromMilliseconds(score).ToString(format);
-            return formattedTime;
+            if (decimalSize <= 0)
+                return seconds.ToString();
+
+            string msPadded = ms.ToString("D3")[..decimalSize];
+            return $"{seconds},{msPadded}";
         }
 
         public static string TimeTypeConvertStatic(int score)

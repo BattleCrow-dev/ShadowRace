@@ -132,12 +132,12 @@ TextureImporter:
       name: pedals_0
       rect:
         serializedVersion: 2
-        x: 33
-        y: 40
+        x: 4
+        y: 16
         width: 513
         height: 287
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -154,12 +154,12 @@ TextureImporter:
       name: pedals_1
       rect:
         serializedVersion: 2
-        x: 598
-        y: 40
-        width: 232
-        height: 451
+        x: 571
+        y: 20
+        width: 225
+        height: 441
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -176,7 +176,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 1ef3afd72df04f84c89f01730bca936e
     internalID: 0
     vertices: []
     indices: 

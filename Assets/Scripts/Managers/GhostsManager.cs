@@ -77,8 +77,8 @@ public class GhostsManager : MonoBehaviour
                 },
                 meta2 = new YG.Range() // version
                 {
-                    min = 0,
-                    max = 2
+                    min = 1,
+                    max = 3
                 },
                 meta3 = new YG.Range() // trackIndex
                 {
@@ -137,7 +137,7 @@ public class GhostsManager : MonoBehaviour
             skinIndex = skinIndex,
             colorIndex = colorIndex,
             isMobile = YG2.envir.isMobile,
-            version = 1,
+            version = 2,
             playerName = YG2.player.name,
             lapTime = timer,
             frames = frames.ToArray()
@@ -151,11 +151,11 @@ public class GhostsManager : MonoBehaviour
         Meta meta = new()
         {
             meta1 = (long) timer,
-            meta2 = 1,
+            meta2 = 2,
             meta3 = trackIndex
         };
 
-        SavesManager.Instance.SetBestResult(trackIndex, timer);
+        SavesManager.Instance.SetBestResult(trackIndex, skinIndex, colorIndex, timer);
 
         YG2.MultiplayerSessions.Push(meta);
     }

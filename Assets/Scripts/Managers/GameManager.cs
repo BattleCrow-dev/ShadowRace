@@ -95,6 +95,7 @@ public class GameManager : MonoBehaviour
 
             return;
         }
+
         if (passedCheckpoints == totalCheckpoints)
         {
             CompleteLap();
@@ -144,12 +145,11 @@ public class GameManager : MonoBehaviour
             cars[i] = tempCars[indices[i]];
         }
 
-        lapTimer = 0f;
-        passedCheckpoints = 0;
-
         if (YG2.player.auth)
             ghostsManager.FinishLap();
 
+        lapTimer = 0f;
+        passedCheckpoints = 0;
         isGameStarted = false;
         uiManager.ShowFinishPanel(times, names, cars);
         SavesManager.Instance.SaveData();

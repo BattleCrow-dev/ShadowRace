@@ -6,20 +6,24 @@ namespace YG
 {
     public partial class SavesYG
     {
-        public int curTrack = 0;
-        public int curCar = 0;
-        public int curCarColor = 0;
+        public int track = 0;
+        public int car = 0;
+        public int color = 0;
 
-        public float curMusicVolume = 7f;
-        public float curSoundsVolume = 10f;
+        public float musicVolume = 10f;
+        public float soundsVolume = 5f;
 
-        public List<float> bestResults = new() { -1f, -1f, -1f };
+        public List<float> bestTimes = new() { -1f, -1f, -1f };
     }
 }
 
 public class SavesManager : MonoBehaviour
 {
     public static SavesManager Instance;
+
+    [Header("Parameters")]
+    [SerializeField] private string[] leaderboardsNames;
+
     private void Awake()
     {
         Instance = this;
@@ -27,26 +31,30 @@ public class SavesManager : MonoBehaviour
 
     public float GetBestResult(int trackIndex)
     {   
-        return YG2.saves.bestResults[trackIndex]; 
+        return YG2.saves.bestTimes[trackIndex]; 
     }
 
-    public void SetBestResult(int trackIndex, float value) 
-    { 
+    public void SetBestResult(int trackIndex, int carIndex, int colorIndex, float value)
+    {
         if (GetBestResult(trackIndex) > value || GetBestResult(trackIndex) == -1)
-            YG2.saves.bestResults[trackIndex] = value;
+        { 
+            YG2.saves.bestTimes[trackIndex] = value;
+            YG2.SetLBTimeConvert(leaderboardsNames[trackIndex], value, $"{carIndex} {colorIndex}");
+        }
+
         SaveData();
     }
 
-    public int GetCurTrack() => YG2.saves.curTrack;
-    public void SetCurTrack(int index) => YG2.saves.curTrack = index;
-    public int GetCurCar() => YG2.saves.curCar;
-    public void SetCurCar(int index) => YG2.saves.curCar = index;
-    public int GetCurCarColor() => YG2.saves.curCarColor;
-    public void SetCurCarColor(int index) => YG2.saves.curCarColor = index;
-    public float GetCurMusicVolume() => YG2.saves.curMusicVolume;
-    public void SetCurMusicVolume(float value) => YG2.saves.curMusicVolume = value;
-    public float GetCurSoundsVolume() => YG2.saves.curSoundsVolume;
-    public void SetCurSoundsVolume(float value) => YG2.saves.curSoundsVolume = value;
+    public int GetCurTrack() => YG2.saves.track;
+    public void SetCurTrack(int index) => YG2.saves.track = index;
+    public int GetCurCar() => YG2.saves.car;
+    public void SetCurCar(int index) => YG2.saves.car = index;
+    public int GetCurCarColor() => YG2.saves.color;
+    public void SetCurCarColor(int index) => YG2.saves.color = index;
+    public float GetCurMusicVolume() => YG2.saves.musicVolume;
+    public void SetCurMusicVolume(float value) => YG2.saves.musicVolume = value;
+    public float GetCurSoundsVolume() => YG2.saves.soundsVolume;
+    public void SetCurSoundsVolume(float value) => YG2.saves.soundsVolume = value;
 
     public void SaveData() => YG2.SaveProgress();
 }
