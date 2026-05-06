@@ -13,6 +13,8 @@ namespace YG
         public float musicVolume = 10f;
         public float soundsVolume = 5f;
 
+        public bool watchedTutorial = false;
+
         public List<float> bestTimes = new() { -1f, -1f, -1f };
     }
 }
@@ -55,6 +57,7 @@ public class SavesManager : MonoBehaviour
     public void SetCurMusicVolume(float value) => YG2.saves.musicVolume = value;
     public float GetCurSoundsVolume() => YG2.saves.soundsVolume;
     public void SetCurSoundsVolume(float value) => YG2.saves.soundsVolume = value;
-
+    public bool GetWatchedTutorial() => YG2.saves.watchedTutorial;
+    public void SetWatchedTutorial(bool value) => YG2.saves.watchedTutorial = value;
     public void SaveData() => YG2.SaveProgress();
 }

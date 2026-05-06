@@ -24,6 +24,8 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject tracksPanel;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject rewardsPanel;
+    [SerializeField] private GameObject playButtonBack;
+    [SerializeField] private GameObject[] tutorialPanels;
 
     [Header("Texts")]
     [SerializeField] private List<TMP_Text> bestTimeTexts;
@@ -57,6 +59,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private Slider soundsVolumeSlider;
 
     private int curCarIndex, curCarColorIndex;
+    private int curTutorialIndex;
     private static bool isGuestMode = false;
 
     private void Start()
@@ -119,7 +122,14 @@ public class MenuManager : MonoBehaviour
         authPanel.SetActive(false);
         mainPanel.SetActive(true);
         authSettingsButton.gameObject.SetActive(false);
+
+        tracksButton.GetComponent<Animation>().enabled = true;
+        garageButton.GetComponent<Animation>().enabled = true;
         rewardsButton.GetComponent<Animation>().enabled = true;
+        playButton.GetComponent<Animation>().enabled = true;
+        settingsButton.GetComponent<Animation>().enabled = true;
+        playButtonBack.GetComponent<Animation>().enabled = true;
+
         rewardsButton.interactable = true;
 
         LoadSaves();
@@ -130,17 +140,66 @@ public class MenuManager : MonoBehaviour
         for (int i = 0; i < bestTimeTexts.Count; i++)
         {
             if (SavesManager.Instance.GetBestResult(i) != -1f)
-                bestTimeTexts[i].text = $"Лучший результат:\n{string.Format("{0:f2}", SavesManager.Instance.GetBestResult(i))} сек.";
+            {
+                if (YG2.lang == "ru")
+                    bestTimeTexts[i].text = $"Лучший результат:\n{string.Format("{0:f2}", SavesManager.Instance.GetBestResult(i))} сек.";
+                else
+                    bestTimeTexts[i].text = $"Best result:\n{string.Format("{0:f2}", SavesManager.Instance.GetBestResult(i))} sec.";
+            }
             else
-                bestTimeTexts[i].text = $"Лучший результат: не установлен";
+            {
+                if (YG2.lang == "ru")
+                    bestTimeTexts[i].text = $"Лучший результат:\nне установлен";
+                else
+                    bestTimeTexts[i].text = $"Best result:\nnot been set";
+            }
         }
-        
+
         ChooseTrack(SavesManager.Instance.GetCurTrack());
         ChooseCar(SavesManager.Instance.GetCurCar());
         ChooseCarColor(SavesManager.Instance.GetCurCarColor());
 
         AudioManager.instance.SetMusicVolume(SavesManager.Instance.GetCurMusicVolume() / musicVolumeSlider.maxValue);
         AudioManager.instance.SetSoundsVolume(SavesManager.Instance.GetCurSoundsVolume() / soundsVolumeSlider.maxValue);
+
+        if (!SavesManager.Instance.GetWatchedTutorial())
+            StartTutorial();
+    }
+
+    private void StartTutorial()
+    {
+        curTutorialIndex = 0;
+
+        tracksButton.GetComponent<Animation>().enabled = false;
+        garageButton.GetComponent<Animation>().enabled = false;
+        rewardsButton.GetComponent<Animation>().enabled = false;
+        playButton.GetComponent<Animation>().enabled = false;
+        settingsButton.GetComponent<Animation>().enabled = false;
+        playButtonBack.GetComponent<Animation>().enabled = false;
+
+        tutorialPanels[curTutorialIndex].SetActive(true);
+    }
+
+    public void NextTutorial()
+    {
+        tutorialPanels[curTutorialIndex].SetActive(false);
+        curTutorialIndex++;
+
+        if (curTutorialIndex < tutorialPanels.Length)
+            tutorialPanels[curTutorialIndex].SetActive(true);
+
+        if (curTutorialIndex == tutorialPanels.Length)
+        {
+            tracksButton.GetComponent<Animation>().enabled = true;
+            garageButton.GetComponent<Animation>().enabled = true;
+            rewardsButton.GetComponent<Animation>().enabled = true;
+            playButton.GetComponent<Animation>().enabled = true;
+            settingsButton.GetComponent<Animation>().enabled = true;
+            playButtonBack.GetComponent<Animation>().enabled = true;
+
+            SavesManager.Instance.SetWatchedTutorial(true);
+            SavesManager.Instance.SaveData();
+        }
     }
 
     private void StartGame()

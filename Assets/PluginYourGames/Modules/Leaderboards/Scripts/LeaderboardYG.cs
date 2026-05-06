@@ -237,7 +237,11 @@ namespace YG
                 if (timeTypeConvert)
                 {
                     string timeScore = TimeTypeConvert(lb.players[i].score);
-                    players[i].data.score = timeScore + " сек.";
+
+                    if (YG2.lang == "ru")
+                        players[i].data.score = timeScore + " сек.";
+                    else
+                        players[i].data.score = timeScore + " sec.";
                 }
                 else
                 {

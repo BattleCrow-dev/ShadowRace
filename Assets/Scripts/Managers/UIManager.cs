@@ -47,7 +47,11 @@ public class UIManager : MonoBehaviour
     {
         for(int i = 0; i < times.Count; i++)
         {
-            finishTimes[i].text = string.Format("{0:f2}", times[i]) + " сек.";
+            if (YG2.lang == "ru")
+                finishTimes[i].text = string.Format("{0:f2}", times[i]) + " сек.";
+            else
+                finishTimes[i].text = string.Format("{0:f2}", times[i]) + " sec.";
+
             finishNames[i].text = names[i];
 
             finishCarsImages[i].enabled = true;
@@ -65,15 +69,17 @@ public class UIManager : MonoBehaviour
 
     public void UpdateLapTimer(float time)
     {
-        currentLapText.text = $"Текущее время: {FormatTime(time)}";
+        if (YG2.lang == "ru")
+            currentLapText.text = $"Текущее время: {FormatTime(time)} сек.";
+        else
+            currentLapText.text = $"Current time: {FormatTime(time)} sec.";
     }
 
     private string FormatTime(float time)
     {
-        int minutes = Mathf.FloorToInt(time / 60f);
-        int seconds = Mathf.FloorToInt(time % 60f);
-        int milliseconds = Mathf.FloorToInt((time * 1000f) % 1000f);
+        int totalSeconds = Mathf.FloorToInt(time);
+        int milliseconds = Mathf.FloorToInt((time * 100f) % 100f);
 
-        return string.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, milliseconds);
+        return string.Format("{0},{1:00}", totalSeconds, milliseconds);
     }
 }
