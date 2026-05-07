@@ -10,7 +10,7 @@ namespace YG
         public int car = 0;
         public int color = 0;
 
-        public float musicVolume = 10f;
+        public float musicVolume = 7f;
         public float soundsVolume = 5f;
 
         public bool watchedTutorial = false;

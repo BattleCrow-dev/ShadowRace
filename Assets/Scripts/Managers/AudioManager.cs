@@ -128,6 +128,5 @@ public class AudioManager : MonoBehaviour
     public void SetSoundsVolume(float value)
     {
         soundsSource.volume = value;
-        motorSource.volume = value;
     }
 }

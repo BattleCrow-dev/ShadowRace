@@ -97,11 +97,11 @@ public class InputManager : MonoBehaviour
         throttle = 0f;
         steering = 0f;
 
-        if (Keyboard.current.aKey.isPressed) steering = 1f;
-        if (Keyboard.current.dKey.isPressed) steering = -1f;
+        if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) steering = 1f;
+        if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) steering = -1f;
 
-        if (Keyboard.current.wKey.isPressed) throttle = 1f;
-        if (Keyboard.current.sKey.isPressed) throttle = -0.5f;
+        if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed) throttle = 1f;
+        if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed) throttle = -0.5f;
     }
 
     private void OnWheelPressed(PointerEventData data)
