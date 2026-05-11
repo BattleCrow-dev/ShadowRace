@@ -78,25 +78,21 @@ public class MenuManager : MonoBehaviour
         rewardsButton.onClick.AddListener(OpenRewards);
         rewardsBackButton.onClick.AddListener(CloseRewards);
 
-        if (!isGuestMode)
-            CheckAuth();
-        else
-            SkipAuth();
-    }
-
-    private void CheckAuth()
-    {
-        YG2.onGetSDKData += OnAuthorized;
         if (YG2.player.auth)
             OnAuthorized();
         else
-            authPanel.SetActive(true);
+        {
+            StartCoroutine(nameof(AuthChecking));
+            if (!isGuestMode)
+                authPanel.SetActive(true);
+            else
+                SkipAuth();
+        }
     }
 
     private void StartAuth()
     {
         YG2.OpenAuthDialog();
-        OnAuthResult();
     }
 
     private void SkipAuth()
@@ -105,23 +101,22 @@ public class MenuManager : MonoBehaviour
         authPanel.SetActive(false);
         authSettingsButton.gameObject.SetActive(true);
         rewardsButton.GetComponent<Animation>().enabled = false;
+        tracksButton.GetComponent<Animation>().enabled = true;
+        garageButton.GetComponent<Animation>().enabled = true;
+        playButton.GetComponent<Animation>().enabled = true;
+        settingsButton.GetComponent<Animation>().enabled = true;
+        playButtonBack.GetComponent<Animation>().enabled = true;
         rewardsButton.interactable = false;
         LoadSaves();
-    }
-
-    private void OnAuthResult()
-    {
-        if (YG2.player.auth)
-            OnAuthorized();
     }
 
     private void OnAuthorized()
     {
         isGuestMode = false;
+        authSettingsButton.gameObject.SetActive(false);
 
         authPanel.SetActive(false);
         mainPanel.SetActive(true);
-        authSettingsButton.gameObject.SetActive(false);
 
         tracksButton.GetComponent<Animation>().enabled = true;
         garageButton.GetComponent<Animation>().enabled = true;
@@ -163,7 +158,12 @@ public class MenuManager : MonoBehaviour
         AudioManager.instance.SetSoundsVolume(SavesManager.Instance.GetCurSoundsVolume() / soundsVolumeSlider.maxValue);
 
         if (!SavesManager.Instance.GetWatchedTutorial())
+        {
+            if (!isGuestMode)
+                CloseSettings();
+
             StartTutorial();
+        }
     }
 
     private void StartTutorial()
@@ -192,7 +192,8 @@ public class MenuManager : MonoBehaviour
         {
             tracksButton.GetComponent<Animation>().enabled = true;
             garageButton.GetComponent<Animation>().enabled = true;
-            rewardsButton.GetComponent<Animation>().enabled = true;
+            if (!isGuestMode)
+                rewardsButton.GetComponent<Animation>().enabled = true;
             playButton.GetComponent<Animation>().enabled = true;
             settingsButton.GetComponent<Animation>().enabled = true;
             playButtonBack.GetComponent<Animation>().enabled = true;
@@ -391,5 +392,13 @@ public class MenuManager : MonoBehaviour
         gameUI.SetActive(true);
 
         gameManager.StartGame();
+    }
+
+    private IEnumerator AuthChecking()
+    {
+        while (!YG2.player.auth)       
+            yield return new WaitForSeconds(0.1f);
+
+        OnAuthorized();
     }
 }

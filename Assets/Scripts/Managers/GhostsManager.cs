@@ -155,8 +155,6 @@ public class GhostsManager : MonoBehaviour
             meta3 = trackIndex
         };
 
-        SavesManager.Instance.SetBestResult(trackIndex, skinIndex, colorIndex, timer);
-
         YG2.MultiplayerSessions.Push(meta);
     }
 

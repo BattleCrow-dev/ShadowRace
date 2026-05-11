@@ -148,10 +148,13 @@ public class GameManager : MonoBehaviour
         if (YG2.player.auth)
             ghostsManager.FinishLap();
 
+        SavesManager.Instance.SetBestResult(currentTrack, currentCar, currentColor, lapTimer);
+
         lapTimer = 0f;
         passedCheckpoints = 0;
         isGameStarted = false;
         uiManager.ShowFinishPanel(times, names, cars);
+
         SavesManager.Instance.SaveData();
     }
 
